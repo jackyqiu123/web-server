@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Client {
+public class Worker {
 
     private Socket client;
     private List<String> request;
@@ -20,7 +20,7 @@ public class Client {
     private RequestType requestType;
     private String uri;
 
-    public Client(Socket client,
+    public Worker(Socket client,
                   List<String> request,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases) {
