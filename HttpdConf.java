@@ -14,10 +14,15 @@ public class HttpdConf{
 
     public HttpdConf(String filePath){
         this.file = new File(filePath);
-        this.bufferedReader = new BufferedReader(new FileReader(this.file));
+        try {
+            this.bufferedReader = new BufferedReader(new FileReader(this.file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         aliasMap = new HashMap<String,String>();
         scriptAliasMap = new HashMap<String,String>();
     }
+
     public void execute(){
         try{
             String key,value,currToken;
