@@ -1,17 +1,33 @@
+import java.io.File;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Client {
 
     private Socket client;
     private List<String> request;
+    private String documentRoot;
+
+    private Map<String, String> aliases;
+    private Map<String, String> scriptAliases;
+
 
     private RequestType requestType;
     private String uri;
 
-    public Client(Socket client, List<String> request) {
+    public Client(Socket client,
+                  List<String> request,
+                  Map<String, String> aliases,
+                  Map<String, String> scriptAliases) {
         this.client = client;
         this.request = request;
+        this.aliases = aliases;
+        this.scriptAliases = scriptAliases;
     }
 
     public void parseRequest() {
@@ -37,18 +53,61 @@ public class Client {
             //TODO response w/ status code 400
         }
 
-        checkUri();
+        uri = checkUri();
 
         checkAuthentication();
 
         sendResponse();
     }
 
-    private void checkUri() {
-        //TODO
-        // if: uri aliased OR script aliased: modify uri
-        // else: resolve path (DOC_ROOT + URI)
-        // if: not isFile:append dirIndex
+    private String checkUri() {
+        String[] uriParts = uri.split("/");
+        String newUri = "";
+
+        uriParts = Arrays.stream(uriParts).filter(item -> !item.equals("")).toArray(String[]::new);
+
+        Boolean isAliased = false;
+
+        for (String uriPart : uriParts) {
+            //TODO slashes also after 'uriPart'
+            uriPart = "/" + uriPart + "/";
+            if (aliases.containsKey(uriPart)) {
+                uriPart = aliases.get(uriPart);
+                isAliased = true;
+                newUri += uriPart;
+            } else if (scriptAliases.containsKey(uriPart)) {
+                uriPart = aliases.get(uriPart);
+                isAliased = true;
+                newUri += uriPart;
+            } else {
+                newUri += uriPart;
+            }
+        }
+
+        uri = newUri;
+
+        // remove trailing '/'
+        uri = uri.substring(0, uri.length() - 1);
+
+        if (!isAliased) {
+            uri = documentRoot + uri;
+        }
+
+
+        File file = new File(uri);
+
+        if (!file.exists() && !file.isDirectory()) {
+            //TODO respond with 404 not found ???
+            return "";
+        }
+
+        if (file.isDirectory()) {
+            //TODO append dirIndex
+        }
+
+        System.out.println("URI = " + uri);
+
+        return uri;
     }
 
     private void checkAuthentication() {
