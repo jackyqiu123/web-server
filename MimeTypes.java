@@ -3,15 +3,17 @@ import java.io.*;
 
 public class MimeTypes{
     private HashMap<String, String> mediaType;
+    private File file;
+    private BufferedReader bufferedReader;
     public MimeTypes(String mimeFile){
+        this.file = new File(mimeFile);
+        this.bufferedReader = new BufferedReader(new FileReader(this.file));
         this.mediaType = new HashMap<String, String>();
     }
-    public void execute(String mimeFile){
+    public void execute(){
         try{
-            File file = new File(mimeFile);
-            BufferedReader mimeReader = new BufferedReader(new FileReader(file));
             String mime, ext;
-            String line = mimeReader.readLine();
+            String line = this.bufferedReader.readLine();
             
             while(line != null){
                 if(line.charAt(0) == "#" || line == ""){
@@ -23,7 +25,7 @@ public class MimeTypes{
                     ext = tokens.nextToken();
                     this.mediaType.put(ext, mime);
                 }
-                line = mimeReader.readLine();
+                line = this.bufferedReader.readLine();
             }
         }
         catch(IOException e){
