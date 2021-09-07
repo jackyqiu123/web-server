@@ -71,5 +71,14 @@ public class HttpdConf{
         }
         else return null;
     }
+    public HashMap<String,String> getScriptAliasMap(){
+        return this.scriptAliasMap;
+    }
+    public HashMap<String,String> getAliasMap(){
+        return this.AliasMap;
+    }
+    public HashMap<String,String> gethttpdMap(){
+        return this.httpdMap;
+    }
 
 }
