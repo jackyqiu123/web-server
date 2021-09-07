@@ -10,8 +10,9 @@ import java.util.stream.Collectors;
 
 public class Worker {
 
+    private Request request;
+
     private Socket client;
-    private List<String> request;
     private String documentRoot;
 
     private Map<String, String> aliases;
@@ -22,43 +23,24 @@ public class Worker {
     private String uri;
 
     public Worker(Socket client,
-                  List<String> request,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases) {
         this.client = client;
-        this.request = request;
         this.aliases = aliases;
         this.scriptAliases = scriptAliases;
     }
 
     public void parseRequest() {
-        try {
-            String rawRequestType = request.get(0).split(" ")[0];
-
-            switch(rawRequestType) {
-                case "GET": requestType = RequestType.GET;
-                case "HEAD": requestType = RequestType.HEAD;
-                case "POST": requestType = RequestType.POST;
-                case "PUT": requestType = RequestType.PUT;
-                case "DELETE": requestType = RequestType.DELETE;
-                default: throw new RuntimeException();
-            }
-        } catch (RuntimeException e) {
-            //TODO response w/ status code 400
-        }
-
-        try {
-            String identifier = request.get(0).split(" ")[1];
-            uri = identifier;
-        } catch (RuntimeException e) {
-            //TODO response w/ status code 400
-        }
+        createRequestObject();
 
         uri = checkUri();
 
         checkAuthentication();
 
         sendResponse();
+    }
+
+    private void createRequestObject() {
     }
 
     private String checkUri() {
@@ -112,7 +94,7 @@ public class Worker {
     }
 
     private void checkAuthentication() {
-        //get folder to check
+        // get folder to check
         String folderUri = "";
         File file = new File(uri);
 
@@ -123,7 +105,7 @@ public class Worker {
         }
 
 
-        //check if htaccess file exists
+        // check if htaccess file exists
         String htaccessFileUri = folderUri + ".htaccess";
         File htaccessFile = new File(htaccessFileUri);
 
@@ -162,12 +144,12 @@ public class Worker {
         Boolean authExists = false;
         String requestPassword = "";
 
-        for (String line : request) {
-            if (line.contains("Authorization:")) {
-                authExists = true;
-                requestPassword = line.split(" ")[2];
-            }
-        }
+//        for (String line : request) {
+//            if (line.contains("Authorization:")) {
+//                authExists = true;
+//                requestPassword = line.split(" ")[2];
+//            }
+//        }
 
         if (!authExists) {
             //TODO response w/ status code 401
