@@ -7,7 +7,11 @@ public class MimeTypes{
     private BufferedReader bufferedReader;
     public MimeTypes(String mimeFile){
         this.file = new File(mimeFile);
-        this.bufferedReader = new BufferedReader(new FileReader(this.file));
+        try {
+            this.bufferedReader = new BufferedReader(new FileReader(this.file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         this.mediaType = new HashMap<String, String>();
     }
     public void execute(){

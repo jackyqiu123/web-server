@@ -1,13 +1,14 @@
-import java.io.File;
+import java.io.*;
 import java.net.Socket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Client {
+public class Worker {
 
     private Socket client;
     private List<String> request;
@@ -20,7 +21,7 @@ public class Client {
     private RequestType requestType;
     private String uri;
 
-    public Client(Socket client,
+    public Worker(Socket client,
                   List<String> request,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases) {
@@ -111,6 +112,75 @@ public class Client {
     }
 
     private void checkAuthentication() {
+        //get folder to check
+        String folderUri = "";
+        File file = new File(uri);
+
+        if (file.isDirectory()) {
+            folderUri = uri;
+        } else {
+            folderUri = file.getParent();
+        }
+
+
+        //check if htaccess file exists
+        String htaccessFileUri = folderUri + ".htaccess";
+        File htaccessFile = new File(htaccessFileUri);
+
+        if (!htaccessFile.exists()) {
+            return;
+        }
+
+
+        //read in authUserFile to password map
+        String htpasswdUri = "";
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(htaccessFileUri))) {
+            String firstLine = bufferedReader.readLine();
+            htpasswdUri = firstLine.split(" ")[1];
+        } catch (IOException e) {
+            //TODO send error response w/ code 403 ???
+            return;
+        }
+
+
+        Map<String, String> passwords = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(htpasswdUri))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String name = line.split(":")[0];
+                String password = line.split(":")[1];
+            }
+        } catch (IOException e) {
+            //TODO send error response w/ code 403 ???
+            return;
+        }
+
+
+        //check if auth header exists
+        Boolean authExists = false;
+        String requestPassword = "";
+
+        for (String line : request) {
+            if (line.contains("Authorization:")) {
+                authExists = true;
+                requestPassword = line.split(" ")[2];
+            }
+        }
+
+        if (!authExists) {
+            //TODO response w/ status code 401
+        }
+
+
+        //TODO: validate password
+
+
+
+
+
+
         //TODO
         // if: htaccess exists: if not auth-header exists: 401 error
         // if: not valid pwd: 403 error
