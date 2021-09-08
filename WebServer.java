@@ -6,6 +6,7 @@ public class WebServer {
   public static final int DEFAULT_PORT = 8080;
   
   public static void main(String[] args) throws IOException{
+    // TODO: Start socket with port read in from httpd.conf file
     ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT);
     final String HTTPD_CONF_FILE = "./config/httpd.conf";
     final String MIME_TYPES_FILE = "./config/mime.types";
