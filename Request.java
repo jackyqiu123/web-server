@@ -10,7 +10,7 @@ public class Request {
     private InputStream inputStream;
     private Socket client;
 
-    private Map headers;
+    private Map<String, String> headers;
     private byte[] body;
 
     public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {

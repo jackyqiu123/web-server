@@ -1,12 +1,11 @@
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Worker {
 
@@ -19,13 +18,15 @@ public class Worker {
     private Map<String, String> scriptAliases;
 
 
-    private RequestType requestType;
-    private String uri;
+    //private RequestType requestType;
+    //private String uri;
 
     public Worker(Socket client,
+                  String documentRoot,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases) {
         this.client = client;
+        this.documentRoot = documentRoot;
         this.aliases = aliases;
         this.scriptAliases = scriptAliases;
     }
@@ -33,9 +34,9 @@ public class Worker {
     public void parseRequest() {
         createRequestObject();
 
-        uri = checkUri();
+        request.setUri(checkUri(request.getUri()));
 
-        checkAuthentication();
+        checkAuthentication(request.getUri());
 
         sendResponse();
     }
@@ -43,7 +44,7 @@ public class Worker {
     private void createRequestObject() {
     }
 
-    private String checkUri() {
+    private String checkUri(String uri) {
         String[] uriParts = uri.split("/");
         String newUri = "";
 
@@ -52,7 +53,7 @@ public class Worker {
         Boolean isAliased = false;
 
         for (String uriPart : uriParts) {
-            //TODO slashes also after 'uriPart'
+            //TODO slashes also after 'uriPart' ?
             uriPart = "/" + uriPart + "/";
             if (aliases.containsKey(uriPart)) {
                 uriPart = aliases.get(uriPart);
@@ -93,7 +94,7 @@ public class Worker {
         return uri;
     }
 
-    private void checkAuthentication() {
+    private void checkAuthentication(String uri) {
         // get folder to check
         String folderUri = "";
         File file = new File(uri);
@@ -110,6 +111,7 @@ public class Worker {
         File htaccessFile = new File(htaccessFileUri);
 
         if (!htaccessFile.exists()) {
+            //TODO send error response w/ code ?????
             return;
         }
 
@@ -133,6 +135,11 @@ public class Worker {
             while ((line = br.readLine()) != null) {
                 String name = line.split(":")[0];
                 String password = line.split(":")[1];
+
+                // replace header in password (e.g. '{SHA}')
+                password = password.replaceAll("\\{.*\\}", "");
+
+                passwords.put(name, password);
             }
         } catch (IOException e) {
             //TODO send error response w/ code 403 ???
@@ -142,33 +149,53 @@ public class Worker {
 
         //check if auth header exists
         Boolean authExists = false;
-        String requestPassword = "";
+        String authorizationHeader = "";
 
-//        for (String line : request) {
-//            if (line.contains("Authorization:")) {
-//                authExists = true;
-//                requestPassword = line.split(" ")[2];
-//            }
-//        }
+        // TODO get auth header from request.header -> if it does exist set authExists to true and set
+        //  requestUser and requestPassword
+        if (request.getHeaders().containsKey("Authorization")) {
+            authorizationHeader = request.getHeaders().get("Authorization").toString();
+            authExists = true;
+        }
 
         if (!authExists) {
             //TODO response w/ status code 401
         }
 
+        //validate password
+        Boolean passwordIsCorrect = false;
 
-        //TODO: validate password
+        for (Map.Entry<String,String> entry : passwords.entrySet()) {
+            String potentialPlainPassword = entry.getKey() + ":" + entry.getValue();
+            String potentialHashedPassword = hashPlainPassword(potentialPlainPassword);
 
+            // TODO: ask how passwords are hashed and how to check them
+        }
 
-
-
-
-
-        //TODO
-        // if: htaccess exists: if not auth-header exists: 401 error
-        // if: not valid pwd: 403 error
     }
 
     private void sendResponse() {
         //TODO
+    }
+
+
+
+
+    private String hashPlainPassword(String potentialPlainPassword) {
+        MessageDigest digest = null;
+        byte[] hash = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(potentialPlainPassword.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        if (hash == null) {
+            return "";
+        }
+
+        String result = new String(hash, StandardCharsets.UTF_8);
+        return result;
     }
 }
