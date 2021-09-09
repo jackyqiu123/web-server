@@ -1,12 +1,11 @@
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Worker {
 
@@ -133,6 +132,11 @@ public class Worker {
             while ((line = br.readLine()) != null) {
                 String name = line.split(":")[0];
                 String password = line.split(":")[1];
+
+                // replace header in password (e.g. '{SHA}')
+                password = password.replaceAll("\\{.*\\}", "");
+
+                passwords.put(name, password);
             }
         } catch (IOException e) {
             //TODO send error response w/ code 403 ???
@@ -142,30 +146,47 @@ public class Worker {
 
         //check if auth header exists
         Boolean authExists = false;
-        String requestPassword = "";
+        String authorizationHeader = "";
 
-//        for (String line : request) {
-//            if (line.contains("Authorization:")) {
-//                authExists = true;
-//                requestPassword = line.split(" ")[2];
-//            }
-//        }
+        // TODO get auth header from request.header -> if it does exist set authExists to true and set
+        //  requestUser and requestPassword
+        if (request.getHeaders().containsKey("Authorization")) {
+            authorizationHeader = request.getHeaders().get("Authorization").toString();
+            authExists = true;
+        }
 
         if (!authExists) {
             //TODO response w/ status code 401
         }
 
+        //validate password
+        Boolean passwordIsCorrect = false;
 
-        //TODO: validate password
+        for (Map.Entry<String,String> entry : passwords.entrySet()) {
+            String potentialPlainPassword = entry.getKey() + ":" + entry.getValue();
+            String potentialHashedPassword = hashPlainPassword(potentialPlainPassword);
 
+            // TODO: ask how passwords are hashed and how to check them
+        }
 
+    }
 
+    private String hashPlainPassword(String potentialPlainPassword) {
+        MessageDigest digest = null;
+        byte[] hash = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(potentialPlainPassword.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
+        if (hash == null) {
+            return "";
+        }
 
-
-        //TODO
-        // if: htaccess exists: if not auth-header exists: 401 error
-        // if: not valid pwd: 403 error
+        String result = new String(hash, StandardCharsets.UTF_8);
+        return result;
     }
 
     private void sendResponse() {
