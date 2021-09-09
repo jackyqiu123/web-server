@@ -18,13 +18,15 @@ public class Worker {
     private Map<String, String> scriptAliases;
 
 
-    private RequestType requestType;
-    private String uri;
+    //private RequestType requestType;
+    //private String uri;
 
     public Worker(Socket client,
+                  String documentRoot,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases) {
         this.client = client;
+        this.documentRoot = documentRoot;
         this.aliases = aliases;
         this.scriptAliases = scriptAliases;
     }
@@ -32,9 +34,9 @@ public class Worker {
     public void parseRequest() {
         createRequestObject();
 
-        uri = checkUri();
+        request.setUri(checkUri(request.getUri()));
 
-        checkAuthentication();
+        checkAuthentication(request.getUri());
 
         sendResponse();
     }
@@ -42,7 +44,7 @@ public class Worker {
     private void createRequestObject() {
     }
 
-    private String checkUri() {
+    private String checkUri(String uri) {
         String[] uriParts = uri.split("/");
         String newUri = "";
 
@@ -51,7 +53,7 @@ public class Worker {
         Boolean isAliased = false;
 
         for (String uriPart : uriParts) {
-            //TODO slashes also after 'uriPart'
+            //TODO slashes also after 'uriPart' ?
             uriPart = "/" + uriPart + "/";
             if (aliases.containsKey(uriPart)) {
                 uriPart = aliases.get(uriPart);
@@ -92,7 +94,7 @@ public class Worker {
         return uri;
     }
 
-    private void checkAuthentication() {
+    private void checkAuthentication(String uri) {
         // get folder to check
         String folderUri = "";
         File file = new File(uri);
@@ -109,6 +111,7 @@ public class Worker {
         File htaccessFile = new File(htaccessFileUri);
 
         if (!htaccessFile.exists()) {
+            //TODO send error response w/ code ?????
             return;
         }
 
@@ -171,6 +174,13 @@ public class Worker {
 
     }
 
+    private void sendResponse() {
+        //TODO
+    }
+
+
+
+
     private String hashPlainPassword(String potentialPlainPassword) {
         MessageDigest digest = null;
         byte[] hash = null;
@@ -187,9 +197,5 @@ public class Worker {
 
         String result = new String(hash, StandardCharsets.UTF_8);
         return result;
-    }
-
-    private void sendResponse() {
-        //TODO
     }
 }
