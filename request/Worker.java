@@ -1,3 +1,5 @@
+package request;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -18,8 +20,8 @@ public class Worker {
     private Map<String, String> scriptAliases;
 
 
-    //private RequestType requestType;
-    //private String uri;
+    // private request.RequestType requestType;
+    // private String uri;
 
     public Worker(Socket client,
                   String documentRoot,
