@@ -1,3 +1,5 @@
+package response;
+
 public enum ResponseCode {
     CODE200,
     CODE201,
