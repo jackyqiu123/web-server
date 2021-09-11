@@ -6,11 +6,7 @@ import response.ResponseService;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Worker {
@@ -22,10 +18,6 @@ public class Worker {
 
     private Map<String, String> aliases;
     private Map<String, String> scriptAliases;
-
-
-    // private request.RequestType requestType;
-    // private String uri;
 
     public Worker(Socket client,
                   String documentRoot,
@@ -44,8 +36,8 @@ public class Worker {
 
         request.setUri(checkUri(request.getUri()));
 
-        Authenticator authenticator = new Authenticator();
-        responseCode = authenticator.checkAuthentication(request);
+        Authenticator authenticator = new Authenticator(request);
+        responseCode = authenticator.checkAuthentication();
 
         //TODO check response code
 
