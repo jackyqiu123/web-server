@@ -1,6 +1,7 @@
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.io.*;
 
 public class Request {
     private RequestType requestType;
@@ -21,6 +22,57 @@ public class Request {
         this.client = client;
         this.headers = headers;
         this.body = body;
+    }
+    public void parseAll()throws IOException{
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
+        String currLine = bufferReader.readLine();
+        while(!currLine.isEmpty()){
+            parseHeaders(currLine);
+            if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
+                parseBody(currLine);
+            }
+            currLine = bufferReader.readLine();
+        }
+    }
+   private void parseRequestline(String line) throws IOException{
+        if(line == null){
+            throw new IOException("bad request");
+        }
+        String [] tokens = line.split(" ");
+        if(tokens.length != 3){
+            throw new IOException("bad request");
+        }
+        String requestType = tokens[0];
+        switch(requestType){
+            case RequestType.GET:
+                break;
+            case RequestType.POST:
+                break;
+            case RequestType.HEAD:
+                break;
+            case RequestType.PUT:
+                break;
+            case RequestType.DELETE:
+                break;
+            default:
+                throw new IOException("bad request");
+        }
+        this.uri = tokens[1];
+        this.httpVersion = tokens[2];
+    }
+    private parseHeaders(String line) throws IOException{
+        String [] tokens = line.split(":", 2);
+        if(tokens.length != 2){
+            throw new IOException("header exception");
+        }
+        else{
+            this.headers.put(tokens[0], tokens[1].trim());
+        }
+    }
+    private parseBody(String line)throws IOException{
+        int contentSize = Integer.parseInt(headers.get("Content-Length"));
+        this.body = new byte[contentSize];
+        this.inputStream.read(this.body, 0, contentSize);
     }
 
     public RequestType getRequestType() {
