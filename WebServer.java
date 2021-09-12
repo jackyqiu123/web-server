@@ -14,12 +14,19 @@ public class WebServer{
     HttpdConf httpdConfig = new HttpdConf(HTTPD_CONF_FILE);
     MimeTypes mime = new MimeTypes(MIME_TYPES_FILE);
 
-    ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT);
-    System.out.println("Server is running on port: " + DEFAULT_PORT);
+    httpdConfig.execute();
+    mime.execute();
+
+    int port = DEFAULT_PORT;
+
+    if (httpdConfig.getPort() != 0) {
+      port = httpdConfig.getPort();
+    }
+
+    ServerSocket serverSocket = new ServerSocket(port);
+    System.out.println("Server is running on port: " + port);
 
     while(true){
-      httpdConfig.execute();
-      mime.execute();
       Socket clientSocket = serverSocket.accept();
       
       
