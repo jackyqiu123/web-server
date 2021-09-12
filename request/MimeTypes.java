@@ -17,17 +17,16 @@ public class MimeTypes{
         this.mediaType = new HashMap<String, String>();
     }
     public void execute(){
-
         try{
             String mime, ext;
             String line = this.bufferedReader.readLine();
-
+            
             while(line != null){
-                if(line.charAt(0) == '#' || line == " "){
+                if(line.startsWith("#") || line.isEmpty()){
                     line = this.bufferedReader.readLine();
                     continue;
                 }
-                StringTokenizer tokens = new StringTokenizer(line);
+                StringTokenizer tokens = new StringTokenizer(line); 
                 mime = tokens.nextToken();
                 while(tokens.hasMoreTokens()){
                     ext = tokens.nextToken();
@@ -39,6 +38,8 @@ public class MimeTypes{
         catch(IOException e){
             e.printStackTrace();
         }
+
+
     }
     
     public String getMime(String ext){

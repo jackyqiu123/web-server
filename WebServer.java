@@ -13,11 +13,6 @@ public class WebServer{
     final String MIME_TYPES_FILE = "./config/mime.types";
     HttpdConf httpdConfig = new HttpdConf(HTTPD_CONF_FILE);
     MimeTypes mime = new MimeTypes(MIME_TYPES_FILE);
-<<<<<<< HEAD
-    System.out.println("Server is running on port: " + DEFAULT_PORT);
-    httpdConfig.execute();
-    mime.execute();
-=======
 
     httpdConfig.execute();
     mime.execute();
@@ -31,7 +26,6 @@ public class WebServer{
     ServerSocket serverSocket = new ServerSocket(port);
     System.out.println("Server is running on port: " + port);
 
->>>>>>> 8b9fdef7b8ea01d1bc3e5d4fc9dd9b0404a21a21
     while(true){
       Socket clientSocket = serverSocket.accept();
     
@@ -39,6 +33,7 @@ public class WebServer{
               httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
       Thread thread = new Thread(worker);
       thread.start();
+      
 
     }
     
