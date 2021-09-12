@@ -5,9 +5,7 @@ import response.ResponseCode;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -142,64 +140,4 @@ public class Authenticator {
             return "";
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public ResponseCode checkAuthenticationnn() {
-        //validate password
-        Boolean passwordIsCorrect = false;
-
-        for (Map.Entry<String,String> entry : passwords.entrySet()) {
-            String potentialPlainPassword = entry.getKey() + ":" + entry.getValue();
-            String potentialHashedPassword = hashPlainPassword(potentialPlainPassword);
-
-            // TODO: ask how passwords are hashed and how to check them
-        }
-
-
-        //success
-        return ResponseCode.CODE200;
-    }
-
-    private String hashPlainPassword(String potentialPlainPassword) {
-        MessageDigest digest = null;
-        byte[] hash = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-            hash = digest.digest(potentialPlainPassword.getBytes("UTF-8"));
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        if (hash == null) {
-            return "";
-        }
-
-        String result = new String(hash, StandardCharsets.UTF_8);
-        return result;
-    }
-
 }
