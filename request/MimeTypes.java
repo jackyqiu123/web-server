@@ -22,7 +22,8 @@ public class MimeTypes{
             String line = this.bufferedReader.readLine();
             
             while(line != null){
-                if(line.charAt(0) == '#' || line == ""){
+                if(line.charAt(0) == '#' || line == " "){
+                    line = this.bufferedReader.readLine();
                     continue;
                 }
                 StringTokenizer tokens = new StringTokenizer(line); 
