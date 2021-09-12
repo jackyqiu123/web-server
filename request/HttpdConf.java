@@ -21,8 +21,9 @@ public class HttpdConf{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        aliasMap = new HashMap<String,String>();
-        scriptAliasMap = new HashMap<String,String>();
+        this.aliasMap = new HashMap<String,String>();
+        this.scriptAliasMap = new HashMap<String,String>();
+        this.httpdMap = new HashMap<String,String>();
     }
 
     public void execute(){
@@ -38,20 +39,22 @@ public class HttpdConf{
                     key = tokens.nextToken();
                     while(tokens.hasMoreTokens()){
                         value = tokens.nextToken().replace("\"", "");
-                        scriptAliasMap.put(key, value);
+                        this.scriptAliasMap.put(key, value);
                     }
                 }
                 else if(currToken.equalsIgnoreCase("alias")){
                     key = tokens.nextToken();
                     while(tokens.hasMoreTokens()){
                         value = tokens.nextToken().replace("\"", "");
-                        aliasMap.put(key, value);
+                        this.aliasMap.put(key, value);
                     }
                 }
                 else{ 
                     key = currToken;
                     value = tokens.nextToken().replace("\"", "");
-                    httpdMap.put(key, value);
+                    this.httpdMap.put(key, value);
+                    
+                    
                 }
                 line = this.bufferedReader.readLine();
             }
