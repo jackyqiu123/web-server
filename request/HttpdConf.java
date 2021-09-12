@@ -13,7 +13,6 @@ public class HttpdConf{
     private File file;
     private BufferedReader bufferedReader;
 
-
     public HttpdConf(String filePath){
         this.file = new File(filePath);
         try {
@@ -76,6 +75,8 @@ public class HttpdConf{
         }
         else return null;
     }
+
+    public int getPort() { return Integer.valueOf(httpdMap.get("Listen")); }
     public HashMap<String,String> getScriptAliasMap(){
         return this.scriptAliasMap;
     }
