@@ -24,8 +24,8 @@ public class WebServer {
       Thread thread = new Thread(worker);
       thread.start();
 
-      System.err.println("Client connected");
-      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//      System.err.println("Client connected");
+//      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
     }
     
