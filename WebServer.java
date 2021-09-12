@@ -19,8 +19,11 @@ public class WebServer {
 
     while(true){
       Socket clientSocket = serverSocket.accept();
+<<<<<<< HEAD
 //      Thread worker = new request.Worker(clientSocket,httpdConfig.gethttpdMap().get("DocumentRoot"),httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
      // worker.start();
+=======
+>>>>>>> 410f05bb02160fc2c0f6969847606cdf8f6a30d8
       Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
               httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
       Thread thread = new Thread(worker);
