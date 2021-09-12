@@ -22,7 +22,7 @@ public class MimeTypes{
             String line = this.bufferedReader.readLine();
             
             while(line != null){
-                if(line.startsWith("#") || line.isEmpty()){
+                if(line.startsWith("#") || "".equals(line)){
                     line = this.bufferedReader.readLine();
                     continue;
                 }
