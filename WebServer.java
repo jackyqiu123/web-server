@@ -19,11 +19,15 @@ public class WebServer {
 
     while(true){
       Socket clientSocket = serverSocket.accept();
-      Thread worker = new request.Worker(clientSocket, , httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
-      worker.start();
+//      Thread worker = new request.Worker(clientSocket,httpdConfig.gethttpdMap().get("DocumentRoot"),httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
+     // worker.start();
+      Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
+              httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
+      Thread thread = new Thread(worker);
+      thread.start();
 
-      System.err.println("Client connected");
-      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//      System.err.println("Client connected");
+//      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
     }
     

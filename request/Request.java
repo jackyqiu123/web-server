@@ -27,13 +27,13 @@ public class Request {
     }
     public void parseAll()throws IOException{
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
-        String currLine = bufferReader.readLine();
+        String currLine = bufferedReader.readLine();
         while(!currLine.isEmpty()){
             parseHeaders(currLine);
             if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
                 parseBody(currLine);
             }
-            currLine = bufferReader.readLine();
+            currLine = bufferedReader.readLine();
         }
     }
    private void parseRequestline(String line) throws IOException{
@@ -46,15 +46,15 @@ public class Request {
         }
         String requestType = tokens[0];
         switch(requestType){
-            case RequestType.GET:
+            case "GET":
                 break;
-            case RequestType.POST:
+            case "POST":
                 break;
-            case RequestType.HEAD:
+            case "HEAD":
                 break;
-            case RequestType.PUT:
+            case "PUT":
                 break;
-            case RequestType.DELETE:
+            case "DELETE":
                 break;
             default:
                 throw new IOException("bad request");
@@ -62,7 +62,7 @@ public class Request {
         this.uri = tokens[1];
         this.httpVersion = tokens[2];
     }
-    private parseHeaders(String line) throws IOException{
+    private void parseHeaders(String line) throws IOException{
         String [] tokens = line.split(":", 2);
         if(tokens.length != 2){
             throw new IOException("header exception");
@@ -71,7 +71,7 @@ public class Request {
             this.headers.put(tokens[0], tokens[1].trim());
         }
     }
-    private parseBody(String line)throws IOException{
+    private void parseBody(String line)throws IOException{
         int contentSize = Integer.parseInt(headers.get("Content-Length"));
         this.body = new byte[contentSize];
         this.inputStream.read(this.body, 0, contentSize);
