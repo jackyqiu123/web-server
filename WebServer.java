@@ -33,8 +33,6 @@ public class WebServer{
               httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
       Thread thread = new Thread(worker);
       thread.start();
-      
-
     }
     
   } // end of main
