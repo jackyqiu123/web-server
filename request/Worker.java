@@ -31,25 +31,34 @@ public class Worker implements Runnable {
     }
 
     public void run() {
-        createRequestObject();
+        request = new Request(client);
+        try {
+            request.parseAll();
+        } catch (IOException e) {
+            //TODO respond with error message
+        }
 
         ResponseCode responseCode = ResponseCode.CODE200;
 
-
         ResourceChecker resourceChecker = new ResourceChecker(aliases, scriptAliases, documentRoot);
-        request.setUri(resourceChecker.checkUri(request.getUri()));
+        responseCode = resourceChecker.checkUri(request);
+
+        if (responseCode != ResponseCode.CODE200) {
+            //TODO send response w/ error code
+        }
 
         Authenticator authenticator = new Authenticator(request);
         responseCode = authenticator.checkAuthentication();
 
-        //TODO check response code
+        if (responseCode != ResponseCode.CODE200) {
+            //TODO send response w/ error code
+        }
 
         ResponseService response = new ResponseService();
         responseCode = response.sendResponse();
 
-        //TODO check response code
-    }
-
-    private void createRequestObject() {
+        if (responseCode != ResponseCode.CODE200) {
+            //TODO send response w/ error code
+        }
     }
 }

@@ -3,6 +3,9 @@ package request;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.Map;
+
+import jdk.internal.org.jline.utils.InputStreamReader;
+
 import java.io.*;
 
 public class Request {
@@ -15,19 +18,30 @@ public class Request {
 
     private Map<String, String> headers;
     private byte[] body;
+    private BufferedReader buffReader;
 
-    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
-        this.requestType = requestType;
-        this.uri = uri;
-        this.httpVersion = httpVersion;
-        this.inputStream = inputStream;
+//    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
+//        this.requestType = requestType;
+//        this.uri = uri;
+//        this.httpVersion = httpVersion;
+//        this.inputStream = inputStream;
+//        this.client = client;
+//        this.headers = headers;
+//        this.body = body;
+//    }
+
+    public Request(Socket client) {
         this.client = client;
-        this.headers = headers;
-        this.body = body;
+        // this.buffReader = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
     }
+
+
     public void parseAll()throws IOException{
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
+       
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String currLine = bufferedReader.readLine();
+        parseRequestline(currLine);
+        currLine = bufferedReader.readLine();
         while(!currLine.isEmpty()){
             parseHeaders(currLine);
             if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
@@ -36,6 +50,9 @@ public class Request {
             currLine = bufferedReader.readLine();
         }
     }
+
+
+
    private void parseRequestline(String line) throws IOException{
         if(line == null){
             throw new IOException("bad request");
