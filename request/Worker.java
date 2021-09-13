@@ -31,7 +31,12 @@ public class Worker implements Runnable {
     }
 
     public void run() {
-        createRequestObject();
+        request = new Request(client);
+        try {
+            request.parseAll();
+        } catch (IOException e) {
+            //TODO respond with error message
+        }
 
         ResponseCode responseCode = ResponseCode.CODE200;
 
@@ -55,8 +60,5 @@ public class Worker implements Runnable {
         if (responseCode != ResponseCode.CODE200) {
             //TODO send response w/ error code
         }
-    }
-
-    private void createRequestObject() {
     }
 }

@@ -16,17 +16,23 @@ public class Request {
     private Map<String, String> headers;
     private byte[] body;
 
-    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
-        this.requestType = requestType;
-        this.uri = uri;
-        this.httpVersion = httpVersion;
-        this.inputStream = inputStream;
+//    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
+//        this.requestType = requestType;
+//        this.uri = uri;
+//        this.httpVersion = httpVersion;
+//        this.inputStream = inputStream;
+//        this.client = client;
+//        this.headers = headers;
+//        this.body = body;
+//    }
+
+    public Request(Socket client) {
         this.client = client;
-        this.headers = headers;
-        this.body = body;
     }
+
+
     public void parseAll()throws IOException{
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String currLine = bufferedReader.readLine();
         while(!currLine.isEmpty()){
             parseHeaders(currLine);

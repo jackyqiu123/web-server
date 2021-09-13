@@ -22,6 +22,11 @@ public class ResourceChecker {
     }
 
     public ResponseCode checkUri(Request request) {
+
+        Request test = request;
+
+        int nasd = 0;
+
         String uri = request.getUri();
         String[] uriParts = uri.split("/");
         String newUri = "";
