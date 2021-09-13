@@ -42,6 +42,7 @@ public class Request {
             currLine = bufferedReader.readLine();
         }
     }
+
    private void parseRequestline(String line) throws IOException{
         if(line == null){
             throw new IOException("bad request");

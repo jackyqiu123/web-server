@@ -2,6 +2,14 @@ package response;
 
 public class DeleteRequestService {
 
-    //TODO fulfill put requests
+    private String uri;
+
+    public DeleteRequestService(String uri) {
+        this.uri = uri;
+    }
+
+    //TODO delete the file
+    //TODO respond with response code by calling the ResponseService class
+
 
 }

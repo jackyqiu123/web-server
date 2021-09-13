@@ -7,7 +7,6 @@ import response.ResponseService;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Map;
 
 public class Worker implements Runnable {
@@ -54,11 +53,6 @@ public class Worker implements Runnable {
             //TODO send response w/ error code
         }
 
-        ResponseService response = new ResponseService();
-        responseCode = response.sendResponse();
-
-        if (responseCode != ResponseCode.CODE200) {
-            //TODO send response w/ error code
-        }
+        // TODO call appropriate RequestService
     }
 }
