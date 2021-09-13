@@ -1,5 +1,8 @@
 package resource;
 
+import request.Request;
+import response.ResponseCode;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
@@ -18,8 +21,8 @@ public class ResourceChecker {
         this.documentRoot = documentRoot;
     }
 
-    //TODO make return type the ResponseCode
-    public String checkUri(String uri) {
+    public ResponseCode checkUri(Request request) {
+        String uri = request.getUri();
         String[] uriParts = uri.split("/");
         String newUri = "";
 
@@ -56,16 +59,15 @@ public class ResourceChecker {
         File file = new File(uri);
 
         if (!file.exists() && !file.isDirectory()) {
-            //TODO respond with 404 not found ???
-            return "";
+            return ResponseCode.CODE404;
         }
 
         if (file.isDirectory()) {
             //TODO append dirIndex
         }
 
-        System.out.println("URI = " + uri);
+        request.setUri(uri);
 
-        return uri;
+        return ResponseCode.CODE200;
     }
 }
