@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "java",
+			"targetPath": "${workspaceFolder}/${workspaceFolderBasename}.jar",
+			"elements": [
+				"${compileOutput:CSC667-web-server-project}",
+				"${dependencies:CSC667-web-server-project}",
+				"${compileOutput:CSC667-web-server-project (2)}",
+				"${dependencies:CSC667-web-server-project (2)}"
+			],
+			"problemMatcher": [],
+			"label": "java: exportjar:CSC667-web-server-project",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

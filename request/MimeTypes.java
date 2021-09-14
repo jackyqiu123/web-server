@@ -45,7 +45,7 @@ public class MimeTypes{
     public String getMime(String ext){
         String mime = mediaType.get(ext);
         if(mime == null){
-            return "text/text";
+            return "text/plain";
         }
         else{
             return mime;
