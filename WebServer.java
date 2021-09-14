@@ -6,6 +6,8 @@ import java.io.*;
 import java.lang.*;
 
 public class WebServer{
+
+  //TODO create Server class & do all this stuff there ???
   
   public static final int DEFAULT_PORT = 8080;
   public static void main(String[] args) throws IOException{

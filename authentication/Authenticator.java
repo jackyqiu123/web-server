@@ -10,6 +10,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO cherry on top: store htpasswd password for later access on first parse
+
 public class Authenticator {
 
     Request request;
@@ -43,8 +45,14 @@ public class Authenticator {
             folderUri = file.getParent();
         }
 
-        // check if htaccess file exists
-        String htaccessFileUri = folderUri + ".htaccess";
+        // check if access file exists
+        String accessFileEnding = ".htaccess";
+
+        if (request.getHeaders().containsKey("DirectoryIndex")) {
+            accessFileEnding = request.getHeaders().get("DirectoryIndex").toString();
+        }
+
+        String htaccessFileUri = folderUri + accessFileEnding;
         File htaccessFile = new File(htaccessFileUri);
 
         if (!htaccessFile.exists()) {
@@ -57,10 +65,19 @@ public class Authenticator {
         String htpasswdUri = "";
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(htaccessFileUri))) {
-            String firstLine = bufferedReader.readLine();
-            htpasswdUri = firstLine.split(" ")[1];
-        } catch (IOException e) {
-            return ResponseCode.CODE403;
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("AuthUserFile")) {
+                    htpasswdUri = line.split(" ")[1];
+                    break;
+                }
+            }
+
+            if (htpasswdUri.isEmpty()) {
+                throw new RuntimeException();
+            }
+        } catch (IOException | RuntimeException e) {
+            return ResponseCode.CODE500;
         }
 
         //read in .htpasswd to password map
@@ -78,7 +95,7 @@ public class Authenticator {
                 passwords.put(name, password);
             }
         } catch (IOException e) {
-            return ResponseCode.CODE403;
+            return ResponseCode.CODE500;
         }
 
         return ResponseCode.CODE200;

@@ -2,6 +2,8 @@ package request;
 
 import java.io.InputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.io.*;
 
@@ -32,9 +34,10 @@ public class Request {
 
 
     public void parseAll()throws IOException{
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
+                Charset.forName(StandardCharsets.UTF_8.name())));
         String currLine = bufferedReader.readLine();
-        while(!currLine.isEmpty()){
+        while(/*!currLine.isEmpty()*/ !currLine.equals("")){
             parseHeaders(currLine);
             if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
                 parseBody(currLine);

@@ -1,5 +1,6 @@
 package resource;
 
+import request.HttpdConf;
 import request.Request;
 import response.ResponseCode;
 
@@ -23,11 +24,13 @@ public class ResourceChecker {
 
     public ResponseCode checkUri(Request request) {
 
-        Request test = request;
-
-        int nasd = 0;
-
         String uri = request.getUri();
+
+        if (uri.equals("/")) {
+            request.setUri(documentRoot + uri);
+            return ResponseCode.CODE200;
+        }
+
         String[] uriParts = uri.split("/");
         String newUri = "";
 
@@ -68,7 +71,7 @@ public class ResourceChecker {
         }
 
         if (file.isDirectory()) {
-            //TODO append dirIndex
+            //TODO append dirIndex -> from httpd.conf -> default is index.html
         }
 
         request.setUri(uri);
