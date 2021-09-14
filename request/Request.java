@@ -2,10 +2,9 @@ package request;
 
 import java.io.InputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import jdk.internal.org.jline.utils.InputStreamReader;
-
 import java.io.*;
 
 public class Request {
@@ -18,7 +17,6 @@ public class Request {
 
     private Map<String, String> headers;
     private byte[] body;
-    // private BufferedReader buffReader;
 
 //    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
 //        this.requestType = requestType;
@@ -32,17 +30,14 @@ public class Request {
 
     public Request(Socket client) {
         this.client = client;
-        // this.buffReader = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
     }
 
 
     public void parseAll()throws IOException{
-       
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
+                Charset.forName(StandardCharsets.UTF_8.name())));
         String currLine = bufferedReader.readLine();
-        parseRequestline(currLine);
-        currLine = bufferedReader.readLine();
-        while(!currLine.isEmpty()){
+        while(/*!currLine.isEmpty()*/ !currLine.equals("")){
             parseHeaders(currLine);
             if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
                 parseBody(currLine);
