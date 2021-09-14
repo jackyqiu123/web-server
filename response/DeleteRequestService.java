@@ -1,5 +1,9 @@
 package response;
 
+import request.Request;
+
+import java.io.FileReader;
+
 public class DeleteRequestService {
     // possible responses are 202(Accepted), 204(No Content), 200(OK) for Delete request
     private String uri;

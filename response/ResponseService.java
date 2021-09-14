@@ -1,5 +1,8 @@
 package response;
 
+import request.Request;
+import request.RequestType;
+
 public class ResponseService {
 
     private ResponseCode responseCode;
@@ -13,21 +16,23 @@ public class ResponseService {
 
 
 
-    public void sendResponse(Request request) { 
+    public void sendResponse(Request request) {
         
         // TODO: send responses
         DeleteRequestService deleteHandler = new  DeleteRequestService (request);
-        GetRequestService getHandler = new GetRequestService(request);
-        HeadRequestService headHandler = new HeadRequestService(request);
-        PostRequestService postHandler = new PostRequestService(request);
-        PutRequestService putHandler = new PutRequestService(request);
+        GetRequestService getHandler = new GetRequestService(request.getUri());
+        HeadRequestService headHandler = new HeadRequestService(request.getUri());
+        PostRequestService postHandler = new PostRequestService(request.getUri());
+        PutRequestService putHandler = new PutRequestService(request.getUri());
         switch(request.getRequestType()){
-            case "GET": // getHandler executes method
-            case "POST": // post Handler executes method
-            case "HEAD": // headHandler executes method
-            case "DELETE": // deleteHandler executes method
-            case "PUT": // putHandler executes method
-        }  
+            case GET: // getHandler executes method
+            case POST: // post Handler executes method
+            case HEAD: // headHandler executes method
+            case DELETE: // deleteHandler executes method
+            case PUT: // putHandler executes method
+            default:
+                throw new IllegalStateException("Unexpected value: " + request.getRequestType());
+        }
 
     }
 }

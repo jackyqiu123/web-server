@@ -77,9 +77,8 @@ public class HttpdConf{
     }
     public String getExtension(){
         String[] splitDocRoot = this.httpdMap.get("DocumentRoot").split("/");
-        String extention = splitDocRoot[splitDocRoot.length - 1];
+        String extension = splitDocRoot[splitDocRoot.length - 1];
         return extension;
-
     }
 
     public int getPort() { return Integer.valueOf(httpdMap.get("Listen")); }
