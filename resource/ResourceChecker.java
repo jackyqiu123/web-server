@@ -70,8 +70,14 @@ public class ResourceChecker {
             return ResponseCode.CODE404;
         }
 
+        String dirIndex = "index.html";
+
+        if (request.getHeaders().containsKey("DirectoryIndex")) {
+            dirIndex = request.getHeaders().get("DirectoryIndex").toString();
+        }
+
         if (file.isDirectory()) {
-            //TODO append dirIndex -> from httpd.conf -> default is index.html
+            uri = uri + dirIndex;
         }
 
         request.setUri(uri);

@@ -48,8 +48,8 @@ public class Authenticator {
         // check if access file exists
         String accessFileEnding = ".htaccess";
 
-        if (request.getHeaders().containsKey("DirectoryIndex")) {
-            accessFileEnding = request.getHeaders().get("DirectoryIndex").toString();
+        if (request.getHeaders().containsKey("AccessFile")) {
+            accessFileEnding = request.getHeaders().get("AccessFile").toString();
         }
 
         String htaccessFileUri = folderUri + accessFileEnding;
