@@ -75,10 +75,15 @@ public class HttpdConf{
         }
         else return null;
     }
-    public String getExtension(){
+    public String getExtension() throws IOException{
         String[] splitDocRoot = this.httpdMap.get("DocumentRoot").split("/");
-        String extention = splitDocRoot[splitDocRoot.length - 1];
-        return extension;
+        String filenName = splitDocRoot[splitDocRoot.length - 1];
+        String[] splitFileName = fileName.split("\\.");
+        String fileExt = splitFileName[splitFileName.length -1];
+        if(fileExt == fileName){
+            throw new IOException("Error: The file may be a directory instead of a file");
+        }
+        return fileExt;
 
     }
 
