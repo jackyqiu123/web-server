@@ -8,6 +8,7 @@ public class GetRequestService {
         this.uri = uri;
     }
 
+    public String sendResponse(){}
     //TODO get the file
     //TODO respond with response code and file-body by calling the ResponseService class
 

@@ -11,6 +11,7 @@ public class DeleteRequestService {
         this.uri = request.getUri();
 
     }
+    public String sendResponse(){}
 
     //TODO delete the file
     //TODO respond with response code by calling the ResponseService class
