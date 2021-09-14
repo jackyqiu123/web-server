@@ -18,7 +18,7 @@ public class Request {
 
     private Map<String, String> headers;
     private byte[] body;
-    private BufferedReader buffReader;
+    // private BufferedReader buffReader;
 
 //    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
 //        this.requestType = requestType;
