@@ -7,7 +7,7 @@ public class HeadRequestService {
     public HeadRequestService(String uri) {
         this.uri = uri;
     }
-    public String sendResponse(){}
+    public String sendResponse(){return "";}
     //TODO see if file exists
     //TODO respond with response code by calling the ResponseService class
 

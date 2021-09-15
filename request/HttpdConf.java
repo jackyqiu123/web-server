@@ -77,7 +77,7 @@ public class HttpdConf{
     }
     public String getExtension() throws IOException{
         String[] splitDocRoot = this.httpdMap.get("DocumentRoot").split("/");
-        String filenName = splitDocRoot[splitDocRoot.length - 1];
+        String fileName = splitDocRoot[splitDocRoot.length - 1];
         String[] splitFileName = fileName.split("\\.");
         String fileExt = splitFileName[splitFileName.length -1];
         if(fileExt == fileName){
