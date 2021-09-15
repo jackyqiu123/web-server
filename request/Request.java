@@ -12,21 +12,10 @@ public class Request {
     private String uri;
     private String httpVersion;
 
-    private InputStream inputStream;
     private Socket client;
 
     private Map<String, String> headers;
     private byte[] body;
-
-//    public Request(RequestType requestType, String uri, String httpVersion, InputStream inputStream, Socket client, Map headers, byte[] body) {
-//        this.requestType = requestType;
-//        this.uri = uri;
-//        this.httpVersion = httpVersion;
-//        this.inputStream = inputStream;
-//        this.client = client;
-//        this.headers = headers;
-//        this.body = body;
-//    }
 
     public Request(Socket client) {
         this.client = client;
@@ -34,16 +23,37 @@ public class Request {
 
 
     public void parseAll()throws IOException{
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
-                Charset.forName(StandardCharsets.UTF_8.name())));
-        String currLine = bufferedReader.readLine();
-        while(/*!currLine.isEmpty()*/ !currLine.equals("")){
-            parseHeaders(currLine);
-            if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
-                parseBody(currLine);
+        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        String inputLine;
+
+        Boolean isFirstLine = true;
+
+        while (!(inputLine = in.readLine()).equals("")) {
+            if (isFirstLine) {
+                parseRequestline(inputLine);
+                isFirstLine = false;
+            } else {
+                parseHeaders(inputLine);
             }
-            currLine = bufferedReader.readLine();
         }
+        in.close();
+
+
+
+//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
+//                Charset.forName(StandardCharsets.UTF_8.name())));
+//
+//        String currentLine = bufferedReader.readLine();
+//        parseRequestline(currentLine);
+//        currentLine = bufferedReader.readLine();
+//
+//        while(!currentLine.equals("")){
+//            parseHeaders(currentLine);
+//            if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
+//                parseBody(currentLine);
+//            }
+//            currentLine = bufferedReader.readLine();
+//        }
     }
 
    private void parseRequestline(String line) throws IOException{
@@ -54,17 +64,22 @@ public class Request {
         if(tokens.length != 3){
             throw new IOException("bad request");
         }
-        String requestType = tokens[0];
-        switch(requestType){
+        String inputRequestType = tokens[0];
+        switch(inputRequestType){
             case "GET":
+                requestType = RequestType.GET;
                 break;
             case "POST":
+                requestType = RequestType.POST;
                 break;
             case "HEAD":
+                requestType = RequestType.HEAD;
                 break;
             case "PUT":
+                requestType = RequestType.PUT;
                 break;
             case "DELETE":
+                requestType = RequestType.DELETE;
                 break;
             default:
                 throw new IOException("bad request");
@@ -72,6 +87,7 @@ public class Request {
         this.uri = tokens[1];
         this.httpVersion = tokens[2];
     }
+
     private void parseHeaders(String line) throws IOException{
         String [] tokens = line.split(":", 2);
         if(tokens.length != 2){
@@ -81,10 +97,12 @@ public class Request {
             this.headers.put(tokens[0], tokens[1].trim());
         }
     }
+
     private void parseBody(String line)throws IOException{
+        InputStream inputStream = client.getInputStream();
         int contentSize = Integer.parseInt(headers.get("Content-Length"));
         this.body = new byte[contentSize];
-        this.inputStream.read(this.body, 0, contentSize);
+        inputStream.read(this.body, 0, contentSize);
     }
 
     public RequestType getRequestType() {
@@ -109,14 +127,6 @@ public class Request {
 
     public void setHttpVersion(String httpVersion) {
         this.httpVersion = httpVersion;
-    }
-
-    public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
     }
 
     public Socket getClient() {
