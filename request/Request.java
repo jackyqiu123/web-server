@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.io.*;
 
@@ -19,6 +20,8 @@ public class Request {
 
     public Request(Socket client) {
         this.client = client;
+
+        headers = new HashMap<>();
     }
 
 
