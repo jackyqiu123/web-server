@@ -2,8 +2,6 @@ package request;
 
 import java.io.InputStream;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.*;
@@ -26,6 +24,25 @@ public class Request {
 
 
     public void parseAll()throws IOException{
+
+//        String line;
+//
+//        BufferedReader reader = new BufferedReader(
+//                new InputStreamReader( client.getInputStream() )
+//        );
+//
+//        while( true ) {
+//            line = reader.readLine();
+//
+//            if( line == null ) {
+//                break;
+//            }
+//
+//            System.out.println("> " + line);
+//        }
+
+
+
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String inputLine;
 
@@ -38,6 +55,7 @@ public class Request {
             } else {
                 parseHeaders(inputLine);
             }
+            System.out.println(inputLine);
         }
         in.close();
 
@@ -112,10 +130,6 @@ public class Request {
         return requestType;
     }
 
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
-    }
-
     public String getUri() {
         return uri;
     }
@@ -128,31 +142,15 @@ public class Request {
         return httpVersion;
     }
 
-    public void setHttpVersion(String httpVersion) {
-        this.httpVersion = httpVersion;
-    }
-
     public Socket getClient() {
         return client;
-    }
-
-    public void setClient(Socket client) {
-        this.client = client;
     }
 
     public Map getHeaders() {
         return headers;
     }
 
-    public void setHeaders(Map headers) {
-        this.headers = headers;
-    }
-
     public byte[] getBody() {
         return body;
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
     }
 }

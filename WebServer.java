@@ -33,8 +33,10 @@ public class WebServer{
     
       Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
               httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
-      Thread thread = new Thread(worker);
-      thread.start();
+//      Thread thread = new Thread(worker);
+//      thread.start();
+      //TODO run runnable without thread for testing
+      worker.run();
     }
     
   } // end of main
