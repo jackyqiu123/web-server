@@ -27,7 +27,7 @@ public class ResourceChecker {
         String uri = request.getUri();
 
         if (uri.equals("/")) {
-            request.setUri(documentRoot + uri);
+            request.setUri(documentRoot);
             return ResponseCode.CODE200;
         }
 

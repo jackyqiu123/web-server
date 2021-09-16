@@ -7,3 +7,5 @@
 /out
 /.metadata/
 .vscode
+.htaccess
+.htpasswd
