@@ -1,7 +1,13 @@
+package response;
+
 import request.*;
 import java.io.*;
+import java.net.Socket;
+import java.util.Map;
+
 public abstract class Response {  
     private Request request;
+    private HttpdConf httpdConf;
     private String uri;
     private FileReader fileReader;
     private int statusCode;
@@ -10,15 +16,19 @@ public abstract class Response {
     private Socket socket;
     private Map<String, String> headers;
     private File file;
-    
+    private String mime;
+    private String fileSize;
+    private String httpVersion;
+
     public Boolean isValidFile(Request request, File file){
-        if((this.request.getAliasMap().get("/ab/").isEmpty() || this.request.getAliasMap().get("/ab/") == null)&& 
-        this.request.getAliasMap().get("/ab/").isEmpty() || this.request.getAliasMap().get("/~traciely/") == null){
+        if((this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/ab/") == null)&& 
+        this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
             return false;
         }
         if(file.exists() && !file.isDirectory()){
             return true;
         }
+        return true;
     }
     public byte[] NoContentResponse(){
         StringBuilder response = new StringBuilder();

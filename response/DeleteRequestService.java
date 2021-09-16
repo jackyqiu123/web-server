@@ -2,12 +2,8 @@ package response;
 
 import request.Request;
 
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 public class DeleteRequestService extends Response{
@@ -27,10 +23,14 @@ public class DeleteRequestService extends Response{
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
         this.headers = request.getHeaders();
-        this.file = new File(this.url);
+        this.file = new File(this.uri);
 
         if(this.isValidFile(request, this.file)){
-            this.fileReader = new FileReader(this.uri);
+            try {
+                this.fileReader = new FileReader(this.uri);
+            } catch (FileNotFoundException e) {
+                //TODO appropriate error handling
+            }
         }
     }
 
@@ -39,6 +39,7 @@ public class DeleteRequestService extends Response{
             // String mime = headers.get("Content-Type");
             // String fileSize = headers.get("Content-Length");
             // String httpVersion = request.getHttpVersion();
+            String fileSize = null; //TODO idk what this should be
             if((fileSize == null || fileSize == "0") && this.isValidFile(this.request, this.file)){
                 // this.statusCode = 204;
                 // this.statusReason = "NO CONTENT";
@@ -46,7 +47,8 @@ public class DeleteRequestService extends Response{
                 // writer.write("Content-Length: " + fileSize + "\r\n");
                 // writer.write("Content-Type: " + mime + "\r\n");
 
-                write.write(this.NoContentResponse()); // note: writing out bytes, can be converted into a string 
+                //TODO commented out to compile:
+                //writer.write(this.NoContentResponse()); // note: writing out bytes, can be converted into a string
                 this.file.delete();
                 writer.flush();
                 writer.close();
@@ -56,7 +58,9 @@ public class DeleteRequestService extends Response{
                 // this.statusReason = "NOT FOUND";
                 // writer.write(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
                 // writer.write("Content-Type: " + mime + "\r\n");
-                writer.write(this.NotFoundResponse());
+
+                //TODO commented out to compile:
+                //writer.write(this.NotFoundResponse());
                 writer.flush();
                 writer.close();
             }
