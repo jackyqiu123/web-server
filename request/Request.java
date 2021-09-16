@@ -48,14 +48,17 @@ public class Request {
 
         Boolean isFirstLine = true;
 
-        while (!(inputLine = in.readLine()).equals("")) {
+        while ((inputLine = in.readLine()) != null) {
+            if (inputLine.equals("")) {
+                break;
+            }
+
             if (isFirstLine) {
                 parseRequestline(inputLine);
                 isFirstLine = false;
             } else {
                 parseHeaders(inputLine);
             }
-            System.out.println(inputLine);
         }
         in.close();
 

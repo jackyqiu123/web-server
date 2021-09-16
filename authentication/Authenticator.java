@@ -68,7 +68,7 @@ public class Authenticator {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.contains("AuthUserFile")) {
-                    htpasswdUri = line.split(" ")[1];
+                    htpasswdUri = line.split(" ")[1].replaceAll("^\"|\"$", "");
                     break;
                 }
             }

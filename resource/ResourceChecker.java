@@ -26,6 +26,11 @@ public class ResourceChecker {
 
         String uri = request.getUri();
 
+        //TODO maybe remove - nullcheck for postman
+        if (uri == null) {
+            return ResponseCode.CODE500;
+        }
+
         if (uri.equals("/")) {
             request.setUri(documentRoot);
             return ResponseCode.CODE200;
