@@ -30,20 +30,34 @@ public class Worker implements Runnable {
     }
 
     public void run() {
+        ResponseCode responseCode = ResponseCode.CODE200;
+
         request = new Request(client);
+
         try {
-            request.parseAll();
+            responseCode = request.parseAll();
         } catch (IOException e) {
             //TODO respond with error message
+            handleError(responseCode);
+            System.out.println("ERROR - IO Exception");
+            return;
         }
 
-        ResponseCode responseCode = ResponseCode.CODE200;
+        if (responseCode != ResponseCode.CODE200) {
+            //TODO send response w/ error code
+            handleError(responseCode);
+            System.out.println("ERROR - " + responseCode);
+            return;
+        }
 
         ResourceChecker resourceChecker = new ResourceChecker(aliases, scriptAliases, documentRoot);
         responseCode = resourceChecker.checkUri(request);
 
         if (responseCode != ResponseCode.CODE200) {
             //TODO send response w/ error code
+            handleError(responseCode);
+            System.out.println("ERROR - " + responseCode);
+            return;
         }
 
         Authenticator authenticator = new Authenticator(request);
@@ -51,8 +65,16 @@ public class Worker implements Runnable {
 
         if (responseCode != ResponseCode.CODE200) {
             //TODO send response w/ error code
+            handleError(responseCode);
+            System.out.println("ERROR - " + responseCode);
+            return;
         }
 
         // TODO call appropriate RequestService
     }
+
+    private void handleError(ResponseCode responseCode) {
+        //TODO: implement
+    }
+
 }

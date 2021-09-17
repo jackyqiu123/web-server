@@ -1,5 +1,7 @@
 package request;
 
+import response.ResponseCode;
+
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -23,34 +25,28 @@ public class Request {
     }
 
 
-    public void parseAll()throws IOException{
-
-//        String line;
-//
-//        BufferedReader reader = new BufferedReader(
-//                new InputStreamReader( client.getInputStream() )
-//        );
-//
-//        while( true ) {
-//            line = reader.readLine();
-//
-//            if( line == null ) {
-//                break;
-//            }
-//
-//            System.out.println("> " + line);
-//        }
-
-
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+    public ResponseCode parseAll()throws IOException{
+        InputStream inputStream = client.getInputStream();
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         String inputLine;
 
         Boolean isFirstLine = true;
+        Boolean hasBody = false;
+        Boolean inBody = false;
 
         while ((inputLine = in.readLine()) != null) {
-            if (inputLine.equals("")) {
+            System.out.println(inputLine);
+            if (inputLine.equals("\r\n")) {
+                inBody  = true;
+                continue;
+            } else if (inputLine.equals("")) {
                 break;
+            }
+
+            //TODO test body
+            if (inBody) {
+                parseBody(inputStream);
+                continue;
             }
 
             if (isFirstLine) {
@@ -59,8 +55,20 @@ public class Request {
             } else {
                 parseHeaders(inputLine);
             }
+
+            if(inputLine.contains("Content-Length") && headers.get("Content-Length") != "0"){
+                hasBody = true;
+            }
         }
         in.close();
+
+
+        if (requestType == null || uri == null || httpVersion == null) {
+            return ResponseCode.CODE500;
+        } else {
+            return ResponseCode.CODE200;
+        }
+
 
 
 
@@ -122,8 +130,8 @@ public class Request {
         }
     }
 
-    private void parseBody(String line)throws IOException{
-        InputStream inputStream = client.getInputStream();
+
+    private void parseBody(InputStream inputStream)throws IOException{
         int contentSize = Integer.parseInt(headers.get("Content-Length"));
         this.body = new byte[contentSize];
         inputStream.read(this.body, 0, contentSize);
