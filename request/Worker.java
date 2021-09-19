@@ -37,6 +37,8 @@ public class Worker implements Runnable {
     public void run() {
         ResponseCode responseCode = ResponseCode.CODE200;
 
+        logger.setDate();
+
         request = new Request(client);
 
         try {
