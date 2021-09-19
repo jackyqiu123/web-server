@@ -48,7 +48,7 @@ public class DeleteRequestService extends Response{
                 // writer.write("Content-Type: " + mime + "\r\n");
 
                 //TODO commented out to compile:
-                //writer.write(this.NoContentResponse()); // note: writing out bytes, can be converted into a string
+                //writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
                 this.file.delete();
                 writer.flush();
                 writer.close();
@@ -60,7 +60,7 @@ public class DeleteRequestService extends Response{
                 // writer.write("Content-Type: " + mime + "\r\n");
 
                 //TODO commented out to compile:
-                //writer.write(this.NotFoundResponse());
+                //writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();
             }

@@ -3,7 +3,8 @@ package response;
 import request.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.Map;
+import java.util.*;
+import java.nio.file.Files;
 
 public abstract class Response {  
     private Request request;
@@ -30,7 +31,7 @@ public abstract class Response {
         }
         return true;
     }
-    public byte[] NoContentResponse(){
+    public byte[] noContentResponse(){
         StringBuilder response = new StringBuilder();
         String mime = this.headers.get("Content-Type");
         String fileSize = this.headers.get("Content-Length");
@@ -44,7 +45,7 @@ public abstract class Response {
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
     }
-    public byte[] NotFoundResponse(){
+    public byte[] notFoundResponse(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 404;
@@ -54,5 +55,64 @@ public abstract class Response {
 
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
+    }
+
+    public byte[] createdResponse(){
+        StringBuilder response = new StringBuilder();
+        String httpVersion = this.request.getHttpVersion();
+        this.statusCode = 201;
+        this.statusReason = "CREATED";
+        response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Content-Location: " + this.url);
+    }
+
+    public byte[] okResponse(){
+        StringBuilder response = new StringBuilder();
+        String mime = this.headers.get("Content-Type");
+        String fileSize = this.headers.get("Content-Length");
+        String httpVersion = this.request.getHttpVersion();
+        this.statusCode = 200;
+        this.statusReason = "OK";
+
+        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Content-Length: " + this.fileSize + "\r\n");
+        response.append("Content-Type: " + this.mime + "\r\n");
+        byte[] responseBytes = response.toString().getBytes();
+        return responseBytes;
+    }
+    public byte[] badRequest(){
+        StringBuilder response = new StringBuilder();
+        String httpVersion = this.request.getHttpVersion();
+        this.statusCode = 400;
+        this.statusReason = "BAD REQUEST";
+        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        byte[] responseBytes = response.toString().getBytes();
+        return responseBytes;
+
+    }
+    public byte[] unauthorizedResponse(){
+        StringBuilder response = new StringBuilder();
+        String httpVersion = this.request.getHttpVersion();
+        this.statusCode = 401;
+        this.statusReason = "UNAUTHORIZED";
+        Date date = new Date();
+        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Date: " + date );
+        response.append("WWW-Authenticate: Basic \r\n"); // property can vary
+        byte[] responseBytes = response.toString().getBytes();
+        return responseBytes;
+    }
+    public byte[] forbiddenResponse(){
+        StringBuilder response = new StringBuilder();
+        String httpVersion = this.request.getHttpVersion();
+        Date date = new Date();
+        this.statusCode = 403;
+        this.statusReason = "FORBIDDEN";
+        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Date: " + date );
+    }
+    public byte[] getFileContents(){
+        byte[] contents = Files.readAllBytes(this.file.toPath());
+        return contents;
     }
 }
