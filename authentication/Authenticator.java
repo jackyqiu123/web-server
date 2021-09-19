@@ -1,5 +1,6 @@
 package authentication;
 
+import logging.Logger;
 import request.Request;
 import response.ResponseCode;
 
@@ -14,12 +15,14 @@ import java.util.Map;
 
 public class Authenticator {
 
-    Request request;
+    private Request request;
+    private Logger logger;
 
     private Map<String, String> passwords;
 
-    public Authenticator(Request request) {
+    public Authenticator(Request request, Logger loggers) {
         this.request = request;
+        this.logger = logger;
     }
 
     public ResponseCode checkAuthentication() {
@@ -122,6 +125,8 @@ public class Authenticator {
         );
 
         String[] tokens = credentials.split( ":" );
+
+        logger.setUserId(tokens[0]);
 
         Boolean passwordCorrect = verifyPassword(tokens[0], tokens[1]);
 

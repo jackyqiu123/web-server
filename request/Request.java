@@ -1,5 +1,6 @@
 package request;
 
+import logging.Logger;
 import response.ResponseCode;
 
 import java.io.InputStream;
@@ -14,12 +15,14 @@ public class Request {
     private String httpVersion;
 
     private Socket client;
+    private Logger logger;
 
     private Map<String, String> headers;
     private byte[] body;
 
-    public Request(Socket client) {
+    public Request(Socket client, Logger logger) {
         this.client = client;
+        this.logger = logger;
 
         headers = new HashMap<>();
     }
@@ -55,6 +58,7 @@ public class Request {
             }
 
             if (isFirstLine) {
+                logger.setRequestLine(inputLine);
                 parseRequestline(inputLine);
                 isFirstLine = false;
             } else {

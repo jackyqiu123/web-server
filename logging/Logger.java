@@ -91,9 +91,9 @@ public class Logger {
 // LogFormat "%h %l %u %t \"%r\" %>s %b" common
 //      127.0.0.1 (%h) -> IP address from host
 //      - (%l) -> (hyphen indicates that request is not available) RFC 1413 identity of the client determined by identd on the clients machine
-//      frank (%u) -> userid of the person requesting the document as determined by HTTP authentication
-//      [10/Oct/2000:13:55:36 -0700] (%t) -> time request was received
-//      "GET /apache_pb.gif HTTP/1.0" (\"%r\") -> request line from the client is given in double quotes
+//      ✅frank (%u) -> userid of the person requesting the document as determined by HTTP authentication
+//      ✅[10/Oct/2000:13:55:36 -0700] (%t) -> time request was received
+//      ✅"GET /apache_pb.gif HTTP/1.0" (\"%r\") -> request line from the client is given in double quotes
 //      200 (%>s) -> status code that the server sends back to the client
 //      2326 (%b) -> size of the object returned to the client
 

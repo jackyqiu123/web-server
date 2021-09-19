@@ -39,7 +39,7 @@ public class Worker implements Runnable {
 
         logger.setDate();
 
-        request = new Request(client);
+        request = new Request(client, logger);
 
         try {
             responseCode = request.parseAll();
@@ -67,7 +67,7 @@ public class Worker implements Runnable {
             return;
         }
 
-        Authenticator authenticator = new Authenticator(request);
+        Authenticator authenticator = new Authenticator(request, logger);
         responseCode = authenticator.checkAuthentication();
 
         if (responseCode != ResponseCode.CODE200) {
