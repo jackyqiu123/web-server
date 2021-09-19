@@ -25,7 +25,7 @@ public class Request {
     }
 
 
-    public ResponseCode parseAll()throws IOException{
+    public ResponseCode parseAll() throws IOException{
         InputStream inputStream = client.getInputStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         String inputLine;
@@ -35,18 +35,23 @@ public class Request {
         Boolean inBody = false;
 
         while ((inputLine = in.readLine()) != null) {
+            //TODO test body
+            if (inBody) {
+                parseBody(inputStream);
+                continue;
+            }
+
             System.out.println(inputLine);
-            if (inputLine.equals("\r\n")) {
+//            if (inputLine.equals("\r\n")) {
+            if (inputLine.equals("") && hasBody && !inBody) {
                 inBody  = true;
                 continue;
             } else if (inputLine.equals("")) {
                 break;
             }
 
-            //TODO test body
-            if (inBody) {
+            if(headers.get("Content-Length") != null && headers.get("Content-Length") != "0"){
                 parseBody(inputStream);
-                continue;
             }
 
             if (isFirstLine) {

@@ -1,6 +1,7 @@
 package request;
 
 import authentication.Authenticator;
+import logging.Logger;
 import resource.ResourceChecker;
 import response.ResponseCode;
 import response.ResponseService;
@@ -19,14 +20,18 @@ public class Worker implements Runnable {
     private Map<String, String> aliases;
     private Map<String, String> scriptAliases;
 
+    private Logger logger;
+
     public Worker(Socket client,
                   String documentRoot,
                   Map<String, String> aliases,
-                  Map<String, String> scriptAliases) {
+                  Map<String, String> scriptAliases,
+                  String logFileLocation) {
         this.client = client;
         this.documentRoot = documentRoot;
         this.aliases = aliases;
         this.scriptAliases = scriptAliases;
+        this.logger = new Logger(logFileLocation);
     }
 
     public void run() {

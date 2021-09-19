@@ -1,3 +1,4 @@
+import logging.Logger;
 import request.HttpdConf;
 import request.MimeTypes;
 
@@ -32,7 +33,7 @@ public class WebServer{
       Socket clientSocket = serverSocket.accept();
     
       Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
-              httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap());
+              httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap(), httpdConfig.gethttpdMap().get("LogFile"));
 //      Thread thread = new Thread(worker);
 //      thread.start();
       //TODO run runnable without thread for testing
