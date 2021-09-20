@@ -18,7 +18,8 @@ public class Request {
     private Logger logger;
 
     private Map<String, String> headers;
-    private byte[] body;
+    //private byte[] body;
+    private String body = "";
 
     public Request(Socket client, Logger logger) {
         this.client = client;
@@ -38,14 +39,18 @@ public class Request {
         Boolean inBody = false;
 
         while ((inputLine = in.readLine()) != null) {
-            //TODO test body
+
+            System.out.println(inputLine);
+
             if (inBody) {
-                parseBody(inputStream);
+                //parseBody(inputStream);
+                if (inputLine.equals("")) {
+                    break;
+                }
+                readInBody(inputLine);
                 continue;
             }
 
-            System.out.println(inputLine);
-//            if (inputLine.equals("\r\n")) {
             if (inputLine.equals("") && hasBody && !inBody) {
                 inBody  = true;
                 continue;
@@ -53,9 +58,9 @@ public class Request {
                 break;
             }
 
-            if(headers.get("Content-Length") != null && headers.get("Content-Length") != "0"){
-                parseBody(inputStream);
-            }
+//            if(headers.get("Content-Length") != null && headers.get("Content-Length") != "0"){
+//                parseBody(inputStream);
+//            }
 
             if (isFirstLine) {
                 logger.setRequestLine(inputLine);
@@ -79,6 +84,8 @@ public class Request {
         }
 
 
+
+        //TODO TODO TODO -^
 
 
 //        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
@@ -139,12 +146,16 @@ public class Request {
         }
     }
 
-
-    private void parseBody(InputStream inputStream)throws IOException{
-        int contentSize = Integer.parseInt(headers.get("Content-Length"));
-        this.body = new byte[contentSize];
-        inputStream.read(this.body, 0, contentSize);
+    private void readInBody(String line) {
+        body += line;
     }
+
+
+//    private void parseBody(InputStream inputStream)throws IOException{
+//        int contentSize = Integer.parseInt(headers.get("Content-Length"));
+//        this.body = new byte[contentSize];
+//        inputStream.read(this.body, 0, contentSize);
+//    }
 
     public RequestType getRequestType() {
         return requestType;
@@ -170,7 +181,11 @@ public class Request {
         return headers;
     }
 
-    public byte[] getBody() {
+//    public byte[] getBody() {
+//        return body;
+//    }
+
+    public String getBody() {
         return body;
     }
 }
