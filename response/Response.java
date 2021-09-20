@@ -63,7 +63,10 @@ public abstract class Response {
         this.statusCode = 201;
         this.statusReason = "CREATED";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Content-Location: " + this.url);
+        //TODO changed this.url to this.uri ???
+        response.append("Content-Location: " + this.uri);
+        //TODO add return to compile
+        return null;
     }
 
     public byte[] okResponse(){
@@ -110,8 +113,10 @@ public abstract class Response {
         this.statusReason = "FORBIDDEN";
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
+        //TODO add return to compile
+        return null;
     }
-    public byte[] getFileContents(){
+    public byte[] getFileContents() throws IOException {
         byte[] contents = Files.readAllBytes(this.file.toPath());
         return contents;
     }

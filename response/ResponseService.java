@@ -20,7 +20,7 @@ public class ResponseService {
         
         // TODO: send responses
         DeleteRequestService deleteHandler = new  DeleteRequestService (request);
-        GetRequestService getHandler = new GetRequestService(request.getUri());
+        GetRequestService getHandler = new GetRequestService(request);
         HeadRequestService headHandler = new HeadRequestService(request.getUri());
         PostRequestService postHandler = new PostRequestService(request.getUri());
         PutRequestService putHandler = new PutRequestService(request.getUri());

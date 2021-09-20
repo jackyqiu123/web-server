@@ -1,5 +1,6 @@
 package response;
 
+import request.HttpdConf;
 import request.Request;
 
 import java.io.*;
@@ -40,14 +41,15 @@ public class GetRequestService extends Response{
     //TODO respond with response code and file-body by calling the ResponseService class
     
     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
+        //TODO commented lines out because they did not compile
         if(isValidFile(this.request, this.file)){
-            writer.write(this.okResponse());
-            writer.write(this.getFileContent());
+            //writer.write(this.okResponse());
+            //writer.write(this.getFileContent());
             writer.flush();
             writer.close();
         }
         else{
-            writer.write(this.notFoundResponse());
+            //writer.write(this.notFoundResponse());
             writer.flush();
             writer.close();
         }
