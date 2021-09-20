@@ -18,8 +18,8 @@ public class Request {
     private Logger logger;
 
     private Map<String, String> headers;
-    //private byte[] body;
-    private String body = "";
+    private byte[] body = new byte[0];
+    //private String body = "";
 
     public Request(Socket client, Logger logger) {
         this.client = client;
@@ -58,10 +58,6 @@ public class Request {
                 break;
             }
 
-//            if(headers.get("Content-Length") != null && headers.get("Content-Length") != "0"){
-//                parseBody(inputStream);
-//            }
-
             if (isFirstLine) {
                 logger.setRequestLine(inputLine);
                 parseRequestline(inputLine);
@@ -82,26 +78,6 @@ public class Request {
         } else {
             return ResponseCode.CODE200;
         }
-
-
-
-        //TODO TODO TODO -^
-
-
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
-//                Charset.forName(StandardCharsets.UTF_8.name())));
-//
-//        String currentLine = bufferedReader.readLine();
-//        parseRequestline(currentLine);
-//        currentLine = bufferedReader.readLine();
-//
-//        while(!currentLine.equals("")){
-//            parseHeaders(currentLine);
-//            if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
-//                parseBody(currentLine);
-//            }
-//            currentLine = bufferedReader.readLine();
-//        }
     }
 
    private void parseRequestline(String line) throws IOException{
@@ -147,7 +123,14 @@ public class Request {
     }
 
     private void readInBody(String line) {
-        body += line;
+        //body += line;
+        byte[] inputLine = line.getBytes();
+
+        byte[] newBytes = new byte[body.length + inputLine.length];
+        System.arraycopy(body, 0, newBytes, 0, body.length);
+        System.arraycopy(inputLine, 0, newBytes, body.length, inputLine.length);
+
+        body = newBytes;
     }
 
 
@@ -181,11 +164,11 @@ public class Request {
         return headers;
     }
 
-//    public byte[] getBody() {
-//        return body;
-//    }
-
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
+
+//    public String getBody() {
+//        return body;
+//    }
 }
