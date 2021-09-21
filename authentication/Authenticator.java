@@ -126,8 +126,6 @@ public class Authenticator {
 
         String[] tokens = credentials.split( ":" );
 
-        logger.setUserId(tokens[0]);
-
         Boolean passwordCorrect = verifyPassword(tokens[0], tokens[1]);
 
         if (!passwordCorrect) {
