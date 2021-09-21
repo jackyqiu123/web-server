@@ -39,7 +39,6 @@ public class ResourceChecker {
         Boolean isAliased = false;
 
         for (String uriPart : uriParts) {
-            //TODO slashes also after 'uriPart' ?
             uriPart = "/" + uriPart + "/";
             if (aliases.containsKey(uriPart)) {
                 uriPart = aliases.get(uriPart);
@@ -55,9 +54,6 @@ public class ResourceChecker {
         }
 
         uri = newUri;
-
-        // remove trailing '/'
-        //uri = uri.substring(0, uri.length() - 1);
 
         if (!isAliased) {
             uri = documentRoot.substring(0, documentRoot.length() - 1) + uri;

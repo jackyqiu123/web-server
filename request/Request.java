@@ -19,7 +19,6 @@ public class Request {
 
     private Map<String, String> headers;
     private byte[] body = new byte[0];
-    //private String body = "";
 
     public Request(Socket client, Logger logger) {
         this.client = client;
@@ -133,13 +132,6 @@ public class Request {
         body = newBytes;
     }
 
-
-//    private void parseBody(InputStream inputStream)throws IOException{
-//        int contentSize = Integer.parseInt(headers.get("Content-Length"));
-//        this.body = new byte[contentSize];
-//        inputStream.read(this.body, 0, contentSize);
-//    }
-
     public RequestType getRequestType() {
         return requestType;
     }
@@ -167,8 +159,4 @@ public class Request {
     public byte[] getBody() {
         return body;
     }
-
-//    public String getBody() {
-//        return body;
-//    }
 }
