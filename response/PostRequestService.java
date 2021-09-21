@@ -42,15 +42,19 @@ public class PostRequestService extends Response{
     //TODO create the file
     //TODO respond with response code by calling the ResponseService class
     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-        if(isValidFile(this.request, this.file) && this.body == ""){
-            writer.write(this.okResponse());
-            writer.flush();
-            writer.close();
-        }
-        else if(isValidFile(this.request, this.file)){
-            writer.write(this.createdResponse());
-            writer.flush();
-            writer.close();
+        if(isValidFile(this.request, this.file)){
+            String byteString = new String(this.body, standardCharsets.UTF_8);
+            if(byteString == ""){
+                writer.write(this.okResponse());
+                writer.flush();
+                writer.close();
+            }
+            else{
+                writer.write(this.createdResponse());
+                writer.flush();
+                writer.close();
+            }
+           
         }
         else{
             writer.write(this.forbiddenResponse());
