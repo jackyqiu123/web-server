@@ -18,7 +18,7 @@ public class Request {
     private Logger logger;
 
     private Map<String, String> headers;
-    private byte[] body;
+    private byte[] body = new byte[0];
 
     public Request(Socket client, Logger logger) {
         this.client = client;
@@ -38,23 +38,22 @@ public class Request {
         Boolean inBody = false;
 
         while ((inputLine = in.readLine()) != null) {
-            //TODO test body
+
+            System.out.println(inputLine);
+
             if (inBody) {
-                parseBody(inputStream);
+                if (inputLine.equals("")) {
+                    break;
+                }
+                readInBody(inputLine);
                 continue;
             }
 
-            System.out.println(inputLine);
-//            if (inputLine.equals("\r\n")) {
-            if (inputLine.equals("") && hasBody && !inBody) {
+            if (inputLine.equals("") && hasBody) {
                 inBody  = true;
                 continue;
             } else if (inputLine.equals("")) {
                 break;
-            }
-
-            if(headers.get("Content-Length") != null && headers.get("Content-Length") != "0"){
-                parseBody(inputStream);
             }
 
             if (isFirstLine) {
@@ -77,24 +76,6 @@ public class Request {
         } else {
             return ResponseCode.CODE200;
         }
-
-
-
-
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(client.getInputStream(),
-//                Charset.forName(StandardCharsets.UTF_8.name())));
-//
-//        String currentLine = bufferedReader.readLine();
-//        parseRequestline(currentLine);
-//        currentLine = bufferedReader.readLine();
-//
-//        while(!currentLine.equals("")){
-//            parseHeaders(currentLine);
-//            if(headers.get("Content-Length") != null || headers.get("Content-Length") != "0"){
-//                parseBody(currentLine);
-//            }
-//            currentLine = bufferedReader.readLine();
-//        }
     }
 
    private void parseRequestline(String line) throws IOException{
@@ -139,11 +120,14 @@ public class Request {
         }
     }
 
+    private void readInBody(String line) {
+        byte[] inputLine = line.getBytes();
 
-    private void parseBody(InputStream inputStream)throws IOException{
-        int contentSize = Integer.parseInt(headers.get("Content-Length"));
-        this.body = new byte[contentSize];
-        inputStream.read(this.body, 0, contentSize);
+        byte[] newBytes = new byte[body.length + inputLine.length];
+        System.arraycopy(body, 0, newBytes, 0, body.length);
+        System.arraycopy(inputLine, 0, newBytes, body.length, inputLine.length);
+
+        body = newBytes;
     }
 
     public RequestType getRequestType() {

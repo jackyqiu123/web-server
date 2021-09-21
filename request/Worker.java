@@ -4,7 +4,6 @@ import authentication.Authenticator;
 import logging.Logger;
 import resource.ResourceChecker;
 import response.ResponseCode;
-import response.ResponseService;
 
 import java.io.*;
 import java.net.Socket;
