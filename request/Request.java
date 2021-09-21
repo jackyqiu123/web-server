@@ -157,4 +157,9 @@ public class Request {
     public byte[] getBody() {
         return body;
     }
+
+    public String getUriFileExtension() {
+        //TODO implement
+        return "";
+    }
 }

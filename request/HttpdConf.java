@@ -84,7 +84,6 @@ public class HttpdConf{
             throw new IOException("Error: The file may be a directory instead of a file");
         }
         return fileExt;
-
     }
 
     public int getPort() { return Integer.valueOf(httpdMap.get("Listen")); }
