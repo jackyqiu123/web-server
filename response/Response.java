@@ -17,9 +17,10 @@ public abstract class Response {
     private Socket socket;
     private Map<String, String> headers;
     private File file;
-    private String mime;
+    //private String mime;
     private String fileSize;
     private String httpVersion;
+    
 
     public Boolean isValidFile(Request request, File file){
         if((this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/ab/") == null)&& 
@@ -41,17 +42,18 @@ public abstract class Response {
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Content-Length: " + this.fileSize + "\r\n");
-        response.append("Content-Type: " + this.mime + "\r\n");
+        response.append("Content-Type: " + mime + "\r\n");
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
     }
     public byte[] notFoundResponse(){
         StringBuilder response = new StringBuilder();
+        String mime = this.headers.get("Content-Type");
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 404;
         this.statusReason = "NOT FOUND";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Content-Type: " + this.mime + "\r\n");
+        response.append("Content-Type: " + mime + "\r\n");
 
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
@@ -59,10 +61,12 @@ public abstract class Response {
 
     public byte[] createdResponse(){
         StringBuilder response = new StringBuilder();
+        String mime = this.headers.get("Content-Type");
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 201;
         this.statusReason = "CREATED";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.url);
     }
 

@@ -17,6 +17,7 @@ public class GetRequestService extends Response{
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
+    private bytes[] body;
 
     public GetRequestService(Request request) {
         this.request = request;
@@ -24,6 +25,7 @@ public class GetRequestService extends Response{
         this.requestType = request.getRequestType().toString();
         this.headers = request.getHeaders();
         this.file = new File(this.uri);
+        this.body = request.getBody();
 
         if(this.isValidFile(request, this.file)){
             try {
@@ -32,7 +34,6 @@ public class GetRequestService extends Response{
                 //TODO appropriate error handling
             }
         }
-
     }
 
     public void sendResponse(){
@@ -43,6 +44,7 @@ public class GetRequestService extends Response{
         if(isValidFile(this.request, this.file)){
             writer.write(this.okResponse());
             writer.write(this.getFileContent());
+            writer.write(this.body); // server return the body content of the request
             writer.flush();
             writer.close();
         }
