@@ -57,10 +57,10 @@ public class ResourceChecker {
         uri = newUri;
 
         // remove trailing '/'
-        uri = uri.substring(0, uri.length() - 1);
+        //uri = uri.substring(0, uri.length() - 1);
 
         if (!isAliased) {
-            uri = documentRoot + uri;
+            uri = documentRoot.substring(0, documentRoot.length() - 1) + uri;
         }
 
 

@@ -20,7 +20,7 @@ public class Authenticator {
 
     private Map<String, String> passwords;
 
-    public Authenticator(Request request, Logger loggers) {
+    public Authenticator(Request request, Logger logger) {
         this.request = request;
         this.logger = logger;
     }
@@ -55,7 +55,7 @@ public class Authenticator {
             accessFileEnding = request.getHeaders().get("AccessFile").toString();
         }
 
-        String htaccessFileUri = folderUri + accessFileEnding;
+        String htaccessFileUri = folderUri + "/" + accessFileEnding;
         File htaccessFile = new File(htaccessFileUri);
 
         if (!htaccessFile.exists()) {
