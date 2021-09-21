@@ -42,7 +42,6 @@ public class Request {
             System.out.println(inputLine);
 
             if (inBody) {
-                //parseBody(inputStream);
                 if (inputLine.equals("")) {
                     break;
                 }
@@ -50,7 +49,7 @@ public class Request {
                 continue;
             }
 
-            if (inputLine.equals("") && hasBody && !inBody) {
+            if (inputLine.equals("") && hasBody) {
                 inBody  = true;
                 continue;
             } else if (inputLine.equals("")) {
@@ -122,7 +121,6 @@ public class Request {
     }
 
     private void readInBody(String line) {
-        //body += line;
         byte[] inputLine = line.getBytes();
 
         byte[] newBytes = new byte[body.length + inputLine.length];
