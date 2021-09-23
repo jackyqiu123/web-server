@@ -27,7 +27,6 @@ public class Request {
         headers = new HashMap<>();
     }
 
-
     public ResponseCode parseAll() throws IOException{
         InputStream inputStream = client.getInputStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
@@ -58,7 +57,7 @@ public class Request {
 
             if (isFirstLine) {
                 logger.setRequestLine(inputLine);
-                parseRequestline(inputLine);
+                parseRequestLine(inputLine);
                 isFirstLine = false;
             } else {
                 parseHeaders(inputLine);
@@ -78,7 +77,7 @@ public class Request {
         }
     }
 
-   private void parseRequestline(String line) throws IOException{
+   private void parseRequestLine(String line) throws IOException{
         if(line == null){
             throw new IOException("bad request");
         }
@@ -160,7 +159,7 @@ public class Request {
 
     public String getUriFileExtension() {
         //TODO check
-        String uriExtension = getUri().split(".")[1];
+        String uriExtension = uri.split("\\.")[1];
         return uriExtension;
     }
 }
