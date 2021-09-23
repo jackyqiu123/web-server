@@ -2,33 +2,48 @@ package response;
 
 import request.Request;
 
-import java.io.BufferedWriter;
-import java.net.http.HttpClient;
+import java.io.*;
 import java.util.Map;
 
 public class ScriptService {
     private Request request;
     private String scriptPath;
-    private BufferedWriter bufferedWriter;
 
-    public ScriptService(Request request, String scriptPath, BufferedWriter bufferedWriter) {
+    public ScriptService(Request request, String scriptPath) {
         this.request = request;
         this.scriptPath = scriptPath;
     }
 
-    public void runScript() {
+    public void runScript(BufferedWriter bufferedResponseWriter, String body) {
         Map<String, String> headers = request.getHeaders();
 
-        ProcessBuilder processBuilder = new ProcessBuilder(scriptPath);
-        Map<String, String> environment = processBuilder.environment();
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(scriptPath);
+            Map<String, String> environment = processBuilder.environment();
 
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            environment.put(entry.getKey(), entry.getValue());
+            //set environment variables
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                environment.put(entry.getKey(), entry.getValue());
+            }
+
+            //start process
+            Process process = processBuilder.start();
+
+            //write body (if present) to the stdin of the process
+            if (body != null) {
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+
+                bufferedWriter.write(body);
+            }
+
+            //wait for process to finish
+            process.waitFor();
+
+            //write output of the script to the bufferedResponseWriter
+            bufferedResponseWriter.write(String.valueOf(process.getOutputStream()));
+            bufferedResponseWriter.flush();
+        } catch (IOException | InterruptedException e) {
+            //TODO 500 error
         }
-
-        processBuilder.redirectOutput();
     }
-
-
-
 }
