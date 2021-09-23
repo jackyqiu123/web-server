@@ -21,9 +21,9 @@ public class ResponseService {
         // TODO: send responses
         DeleteRequestService deleteHandler = new  DeleteRequestService (request);
         GetRequestService getHandler = new GetRequestService(request);
-        HeadRequestService headHandler = new HeadRequestService(request.getUri());
-        PostRequestService postHandler = new PostRequestService(request.getUri());
-        PutRequestService putHandler = new PutRequestService(request.getUri());
+        HeadRequestService headHandler = new HeadRequestService(request);
+        PostRequestService postHandler = new PostRequestService(request);
+        PutRequestService putHandler = new PutRequestService(request);
         switch(request.getRequestType()){
             case GET: // getHandler executes method
             case POST: // post Handler executes method

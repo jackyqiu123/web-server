@@ -18,7 +18,7 @@ public class GetRequestService extends Response{
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
-    private bytes[] body;
+    private byte[] body;
 
     public GetRequestService(Request request) {
         this.request = request;
@@ -44,9 +44,10 @@ public class GetRequestService extends Response{
     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
         //TODO commented lines out because they did not compile
         if(isValidFile(this.request, this.file)){
-            writer.write(this.okResponse());
-            writer.write(this.getFileContent());
-            writer.write(this.body); // server return the body content of the request
+            //TODO commented out to compile
+//            writer.write(this.okResponse());
+//            writer.write(this.getFileContent());
+//            writer.write(this.body); // server return the body content of the request
             writer.flush();
             writer.close();
         }

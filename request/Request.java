@@ -159,7 +159,8 @@ public class Request {
     }
 
     public String getUriFileExtension() {
-        //TODO implement
-        return "";
+        //TODO check
+        String uriExtension = getUri().split(".")[1];
+        return uriExtension;
     }
 }

@@ -35,7 +35,8 @@ public abstract class Response {
     public byte[] noContentResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
-        String mime = this.getUriFileExtension();
+        //TODO commented out to compile
+//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String fileSize = this.headers.get("Content-Length");
         String httpVersion = this.request.getHttpVersion();
@@ -45,7 +46,8 @@ public abstract class Response {
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         response.append("Content-Length: " + this.fileSize + "\r\n");
-        response.append("Content-Type: " + mime + "\r\n");
+        //TODO commented out to compile
+//        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.uri);
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
@@ -53,14 +55,16 @@ public abstract class Response {
     public byte[] notFoundResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
-        String mime = this.getUriFileExtension();
+        //TODO commented out to compile
+//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 404;
         this.statusReason = "NOT FOUND";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
-        response.append("Content-Type: " + mime + "\r\n");
+        //TODO commented out to compile
+//        response.append("Content-Type: " + mime + "\r\n");
 
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
@@ -69,14 +73,16 @@ public abstract class Response {
     public byte[] createdResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
-        String mime = this.getUriFileExtension();
+        //TODO commented out to compile
+//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 201;
         this.statusReason = "CREATED";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
-        response.append("Content-Type: " + mime + "\r\n");
+        //TODO commented out to compile
+//        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.uri);
         //TODO changed this.url to this.uri ???
         response.append("Content-Location: " + this.uri);
@@ -89,7 +95,8 @@ public abstract class Response {
         StringBuilder response = new StringBuilder();
         Date date = new Date();
         // String mime = this.headers.get("Content-Type");
-        String mime = this.getUriFileExtension();
+        //TODO commented out to compile
+//        String mime = this.getUriFileExtension();
         String fileSize = this.headers.get("Content-Length");
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 200;
@@ -98,7 +105,8 @@ public abstract class Response {
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         response.append("Content-Length: " + this.fileSize + "\r\n");
-        response.append("Content-Type: " + this.mime + "\r\n");
+        //TODO commented out to compile
+//        response.append("Content-Type: " + this.mime + "\r\n");
         response.append("Content-Location: " + this.uri);
         byte[] responseBytes = response.toString().getBytes();
         return responseBytes;
