@@ -35,8 +35,6 @@ public class PostRequestService extends Response{
                 //TODO appropriate error handling
             }
         }
-        mime.execute();
-        httpdConf.execute();
     }
     public void sendResponse(){
     //TODO create the file
