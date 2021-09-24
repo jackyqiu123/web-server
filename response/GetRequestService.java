@@ -28,6 +28,7 @@ public class GetRequestService extends Response{
         this.file = new File(this.uri);
         this.body = request.getBody();
         this.socket = request.getClient();
+        this.request = request;
 
         if(this.isValidFile(file)){
             try {

@@ -25,6 +25,7 @@ public class DeleteRequestService extends Response{
         this.headers = request.getHeaders();
         this.file = new File(this.uri);
         this.socket = request.getClient();
+        this.request = request;
 
         if(this.isValidFile(file)){
             try {
