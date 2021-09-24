@@ -67,8 +67,6 @@ public class Request {
                 hasBody = true;
             }
         }
-        in.close();
-
 
         if (requestType == null || uri == null || httpVersion == null) {
             return ResponseCode.CODE500;
