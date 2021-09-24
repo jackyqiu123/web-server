@@ -49,7 +49,7 @@ public abstract class Response {
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.uri);
-        String responseBytes = response.toString().getBytes();
+        String responseBytes = response.toString();
         return responseBytes;
     }
     public String notFoundResponse(){
@@ -66,7 +66,7 @@ public abstract class Response {
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
 
-        String responseBytes = response.toString().getBytes();
+        String responseBytes = response.toString();
         return responseBytes;
     }
 
