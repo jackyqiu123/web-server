@@ -29,7 +29,7 @@ public class GetRequestService extends Response{
         this.body = request.getBody();
         this.socket = request.getClient();
 
-        if(this.isValidFile(request, file)){
+        if(this.isValidFile(file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -44,7 +44,7 @@ public class GetRequestService extends Response{
     
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             //TODO commented lines out because they did not compile
-            if(isValidFile(request, file)){
+            if(isValidFile(file)){
                 writer.write(this.okResponse());
                 writer.write(this.getFileContents());
                 writer.write(this.body.toString()); // server return the body content of the request

@@ -30,7 +30,7 @@ public class HeadRequestService extends Response{
         this.body = request.getBody();
         this.socket = request.getClient();
 
-        if(this.isValidFile(request, file)){
+        if(this.isValidFile(file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -43,7 +43,7 @@ public class HeadRequestService extends Response{
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             //TODO commented lines out because they did not compile
-            if(isValidFile(request, file)){
+            if(isValidFile(file)){
                 //TODO commented out to compile
 //                writer.write(this.okResponse());
                 writer.flush();

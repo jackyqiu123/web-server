@@ -16,18 +16,19 @@ public class Request {
 
     private Socket client;
     private Logger logger;
+    private MimeTypes mimes;
 
     private Map<String, String> headers;
     private byte[] body = new byte[0];
 
-    public Request(Socket client, Logger logger) {
+    public Request(Socket client, Logger logger, MimeTypes mimes) {
         this.client = client;
         this.logger = logger;
 
         headers = new HashMap<>();
     }
 
-    public ResponseCode parseAll() throws IOException{
+    public ResponseCode parseAll() throws IOException {
         InputStream inputStream = client.getInputStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
         String inputLine;
@@ -49,7 +50,7 @@ public class Request {
             }
 
             if (inputLine.equals("") && hasBody) {
-                inBody  = true;
+                inBody = true;
                 continue;
             } else if (inputLine.equals("")) {
                 break;
@@ -63,7 +64,7 @@ public class Request {
                 parseHeaders(inputLine);
             }
 
-            if(inputLine.contains("Content-Length") && headers.get("Content-Length") != "0"){
+            if (inputLine.contains("Content-Length") && headers.get("Content-Length") != "0") {
                 hasBody = true;
             }
         }
@@ -75,16 +76,16 @@ public class Request {
         }
     }
 
-   private void parseRequestLine(String line) throws IOException{
-        if(line == null){
+    private void parseRequestLine(String line) throws IOException {
+        if (line == null) {
             throw new IOException("bad request");
         }
-        String [] tokens = line.split(" ");
-        if(tokens.length != 3){
+        String[] tokens = line.split(" ");
+        if (tokens.length != 3) {
             throw new IOException("bad request");
         }
         String inputRequestType = tokens[0];
-        switch(inputRequestType){
+        switch (inputRequestType) {
             case "GET":
                 requestType = RequestType.GET;
                 break;
@@ -107,12 +108,11 @@ public class Request {
         this.httpVersion = tokens[2];
     }
 
-    private void parseHeaders(String line) throws IOException{
-        String [] tokens = line.split(":", 2);
-        if(tokens.length != 2){
+    private void parseHeaders(String line) throws IOException {
+        String[] tokens = line.split(":", 2);
+        if (tokens.length != 2) {
             throw new IOException("header exception");
-        }
-        else{
+        } else {
             this.headers.put(tokens[0], tokens[1].trim());
         }
     }
@@ -164,3 +164,4 @@ public class Request {
             return "text/text";
         }
     }
+}

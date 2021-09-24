@@ -26,7 +26,7 @@ public class DeleteRequestService extends Response{
         this.file = new File(this.uri);
         this.socket = request.getClient();
 
-        if(this.isValidFile(request, file)){
+        if(this.isValidFile(file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -41,7 +41,7 @@ public class DeleteRequestService extends Response{
             // String fileSize = headers.get("Content-Length");
             // String httpVersion = request.getHttpVersion();
             String fileSize = null; //TODO idk what this should be
-            if((fileSize == null || fileSize == "0") && this.isValidFile(request, file)){
+            if((fileSize == null || fileSize == "0") && this.isValidFile(file)){
                 // this.statusCode = 204;
                 // this.statusReason = "NO CONTENT";
                 // writer.write(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");

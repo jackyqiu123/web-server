@@ -32,7 +32,7 @@ public class PostRequestService extends Response{
         this.body = request.getBody();
         this.socket = request.getClient();
 
-        if(this.isValidFile(request, file)){
+        if(this.isValidFile(file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -44,7 +44,7 @@ public class PostRequestService extends Response{
     //TODO create the file
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            if(isValidFile(request, file)){
+            if(isValidFile(file)){
                 String byteString = new String(this.body, StandardCharsets.UTF_8);
                 if(byteString == ""){
                     //TODO commented out to compile
