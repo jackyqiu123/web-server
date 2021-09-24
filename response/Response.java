@@ -19,6 +19,7 @@ public abstract class Response {
     private File file;
     private String fileSize;
     private String httpVersion;
+    private byte[] body;
     
 
     public Boolean isValidFile(File file){
