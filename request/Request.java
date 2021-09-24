@@ -16,15 +16,13 @@ public class Request {
 
     private Socket client;
     private Logger logger;
-    private MimeTypes mimes;
 
     private Map<String, String> headers;
     private byte[] body = new byte[0];
 
-    public Request(Socket client, Logger logger, MimeTypes mimes) {
+    public Request(Socket client, Logger logger) {
         this.client = client;
         this.logger = logger;
-        this.mimes = mimes;
 
         headers = new HashMap<>();
     }
@@ -166,4 +164,3 @@ public class Request {
             return "text/text";
         }
     }
-}

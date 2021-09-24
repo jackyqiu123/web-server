@@ -17,16 +17,21 @@ public abstract class Response {
     private Socket socket;
     private Map<String, String> headers;
     private File file;
-    private byte[] body;
-
     private String fileSize;
     private String httpVersion;
     
 
     public Boolean isValidFile(Request request, File file){
+        // if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
+        // this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
+        //     return false;
+        // }
+        // if(file.exists() && !file.isDirectory()){
+        //     return true;
+        // }
+        // return true;
         return file.exists() && !file.isDirectory();
     }
-
     public String noContentResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
@@ -46,7 +51,6 @@ public abstract class Response {
         String responseBytes = response.toString();
         return responseBytes;
     }
-
     public String notFoundResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
@@ -77,7 +81,7 @@ public abstract class Response {
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         //TODO commented out to compile
-        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+//        response.append("Content-Type: " + mime + "\r\n");
         //TODO changed this.url to this.uri ???
         response.append("Content-Location: " + this.uri);
         //TODO add return to compile
@@ -100,12 +104,11 @@ public abstract class Response {
         response.append("Date: " + date );
         response.append("Content-Length: " + this.body.toString().length() + "\r\n");
         //TODO commented out to compile
-        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+//        response.append("Content-Type: " + this.mime + "\r\n");
         response.append("Content-Location: " + this.uri);
         String responseString = response.toString();
         return responseString;
     }
-
     public String badRequest(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
