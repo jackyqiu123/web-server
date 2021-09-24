@@ -23,14 +23,15 @@ public abstract class Response {
     
 
     public Boolean isValidFile(Request request, File file){
-        if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
-        this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
-            return false;
-        }
-        if(file.exists() && !file.isDirectory()){
-            return true;
-        }
-        return true;
+        // if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
+        // this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
+        //     return false;
+        // }
+        // if(file.exists() && !file.isDirectory()){
+        //     return true;
+        // }
+        // return true;
+        return file.exists() && !file.isDirectory();
     }
     public String noContentResponse(){
         StringBuilder response = new StringBuilder();
