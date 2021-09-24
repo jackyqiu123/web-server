@@ -18,7 +18,7 @@ public class GetRequestService extends Response{
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
-    private bytes[] body;
+    private byte[] body;
 
     public GetRequestService(Request request) {
         this.request = request;

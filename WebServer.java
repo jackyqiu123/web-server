@@ -1,4 +1,3 @@
-import logging.Logger;
 import request.HttpdConf;
 import request.MimeTypes;
 
@@ -7,10 +6,8 @@ import java.io.*;
 import java.lang.*;
 
 public class WebServer{
-
-  //TODO create Server class & do all this stuff there ???
-  
   public static final int DEFAULT_PORT = 8080;
+
   public static void main(String[] args) throws IOException{
     final String HTTPD_CONF_FILE = "./config/httpd.conf";
     final String MIME_TYPES_FILE = "./config/mime.types";
@@ -34,11 +31,10 @@ public class WebServer{
     
       Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
               httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap(), httpdConfig.gethttpdMap().get("LogFile"));
-//      Thread thread = new Thread(worker);
-//      thread.start();
-      //TODO run runnable without thread for testing
-      worker.run();
+      Thread thread = new Thread(worker);
+      thread.start();
+//      TODO run runnable without thread for testing
+//      worker.run();
     }
-    
-  } // end of main
+  }
 }

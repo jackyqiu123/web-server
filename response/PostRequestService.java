@@ -1,9 +1,12 @@
 package response;
 
+import request.HttpdConf;
+import request.MimeTypes;
 import request.Request;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 public class PostRequestService extends Response{
 
@@ -18,7 +21,7 @@ public class PostRequestService extends Response{
     private File file;
     private HttpdConf httpdConf;
     private MimeTypes mime;
-    private bytes[] body;
+    private byte[] body;
 
     public PostRequestService(Request request) {
         this.request = request;
@@ -41,21 +44,24 @@ public class PostRequestService extends Response{
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             if(isValidFile(this.request, this.file)){
-                String byteString = new String(this.body, standardCharsets.UTF_8);
+                String byteString = new String(this.body, StandardCharsets.UTF_8);
                 if(byteString == ""){
-                    writer.write(this.okResponse());
+                    //TODO commented out to compile
+//                    writer.write(this.okResponse());
                     writer.flush();
                     writer.close();
                 }
                 else{
-                    writer.write(this.createdResponse());
+                    //TODO commented out to compile
+//                    writer.write(this.createdResponse());
                     writer.flush();
                     writer.close();
                 }
             
             }
             else{
-                writer.write(this.forbiddenResponse());
+                //TODO commented out to compile
+//                writer.write(this.forbiddenResponse());
                 writer.flush();
                 writer.close();
             }

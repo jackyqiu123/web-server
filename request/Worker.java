@@ -76,7 +76,7 @@ public class Worker implements Runnable {
             return;
         }
 
-        // TODO call appropriate RequestService
+        // TODO call appropriate RequestService & call logger in the end
     }
 
     private void handleError(ResponseCode responseCode) {

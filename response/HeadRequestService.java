@@ -1,5 +1,6 @@
 package response;
 import request.HttpdConf;
+import request.MimeTypes;
 import request.Request;
 
 import java.io.*;
@@ -18,7 +19,7 @@ public class HeadRequestService extends Response{
     private File file;
     private HttpdConf httpdConf;
     private MimeTypes mime;
-    private bytes[] body;
+    private byte[] body;
 
     public HeadRequestService(Request request) {
         this.request = request;
@@ -42,7 +43,8 @@ public class HeadRequestService extends Response{
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             //TODO commented lines out because they did not compile
             if(isValidFile(this.request, this.file)){
-                writer.write(this.okResponse());
+                //TODO commented out to compile
+//                writer.write(this.okResponse());
                 writer.flush();
                 writer.close();
             }

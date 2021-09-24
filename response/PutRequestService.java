@@ -1,5 +1,6 @@
 package response;
 
+import request.HttpdConf;
 import request.Request;
 
 import java.io.*;
@@ -17,7 +18,7 @@ public class PutRequestService {
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
-    private bytes[] body;
+    private byte[] body;
 
     public PutRequestService(Request request) {
         this.request = request;
@@ -35,24 +36,33 @@ public class PutRequestService {
             }
         }
     }
+
+    private boolean isValidFile(Request request, File file) {
+        //TODO impement - added to compile
+        return false;
+    }
+
     public void sendResponse(){
     //TODO create or update the file
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            if(!this.file.exist()){ // file does not exist and will create it
+            if(!this.file.exists()){ // file does not exist and will create it
                 if(this.file.createNewFile()){
-                    writer.write(this.createdResponse());
+                    //TODO commented out to compile
+//                    writer.write(this.createdResponse());
                     writer.flush();
                     writer.close();
                 } 
                 else{ // unsucessful in createing new file
-                    writer.write(badRequest());
+                    //TODO commented out to compile
+//                    writer.write(badRequest());
                     writer.flush();
                     writer.close();
                 }
             }
             else{ // file already exist
-                writer.write(okResponse());
+                //TODO commented out to compile
+//                writer.write(okResponse());
                 writer.flush();
                 writer.close();
             }
