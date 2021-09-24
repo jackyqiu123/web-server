@@ -1,12 +1,14 @@
 package response;
 
 import request.HttpdConf;
+import request.MimeTypes;
 import request.Request;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
-public class PutRequestService {
+public class PostResponseService extends ResponseService {
 
     private Request request;
     private String uri;
@@ -18,9 +20,10 @@ public class PutRequestService {
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
+    private MimeTypes mime;
     private byte[] body;
 
-    public PutRequestService(Request request) {
+    public PostResponseService(Request request) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
@@ -29,7 +32,7 @@ public class PutRequestService {
         this.body = request.getBody();
         this.socket = request.getClient();
 
-        if(this.isValidFile(request, this.file)){
+        if(this.isValidFile(file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -37,33 +40,29 @@ public class PutRequestService {
             }
         }
     }
-
-    private boolean isValidFile(Request request, File file) {
-        //TODO impement - added to compile
-        return false;
-    }
-
     public void sendResponse(){
-    //TODO create or update the file
+    //TODO create the file
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            if(!this.file.exists()){ // file does not exist and will create it
-                if(this.file.createNewFile()){
+            if(isValidFile(file)){
+                String byteString = new String(this.body, StandardCharsets.UTF_8);
+                if(byteString == ""){
+                    //TODO commented out to compile
+//                    writer.write(this.okResponse());
+                    writer.flush();
+                    writer.close();
+                }
+                else{
                     //TODO commented out to compile
 //                    writer.write(this.createdResponse());
                     writer.flush();
                     writer.close();
-                } 
-                else{ // unsucessful in createing new file
-                    //TODO commented out to compile
-//                    writer.write(badRequest());
-                    writer.flush();
-                    writer.close();
                 }
+            
             }
-            else{ // file already exist
+            else{
                 //TODO commented out to compile
-//                writer.write(okResponse());
+//                writer.write(this.forbiddenResponse());
                 writer.flush();
                 writer.close();
             }
@@ -72,4 +71,5 @@ public class PutRequestService {
             e.printStackTrace();
         }
     }
+    
 }

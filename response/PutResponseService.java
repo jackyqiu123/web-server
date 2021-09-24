@@ -1,12 +1,12 @@
 package response;
+
 import request.HttpdConf;
-import request.MimeTypes;
 import request.Request;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
-public class HeadRequestService extends Response{
+public class PutResponseService {
 
     private Request request;
     private String uri;
@@ -18,10 +18,9 @@ public class HeadRequestService extends Response{
     private Map<String, String> headers;
     private File file;
     private HttpdConf httpdConf;
-    private MimeTypes mime;
     private byte[] body;
 
-    public HeadRequestService(Request request) {
+    public PutResponseService(Request request) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
@@ -30,7 +29,7 @@ public class HeadRequestService extends Response{
         this.body = request.getBody();
         this.socket = request.getClient();
 
-        if(this.isValidFile(file)){
+        if(this.isValidFile(request, this.file)){
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
@@ -38,19 +37,33 @@ public class HeadRequestService extends Response{
             }
         }
     }
-    public void sendResponse(){ // basically the same response for Get but does not return file contents and body
-    //TODO see if file exists
+
+    private boolean isValidFile(Request request, File file) {
+        //TODO impement - added to compile
+        return false;
+    }
+
+    public void sendResponse(){
+    //TODO create or update the file
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            //TODO commented lines out because they did not compile
-            if(isValidFile(file)){
-                //TODO commented out to compile
-//                writer.write(this.okResponse());
-                writer.flush();
-                writer.close();
+            if(!this.file.exists()){ // file does not exist and will create it
+                if(this.file.createNewFile()){
+                    //TODO commented out to compile
+//                    writer.write(this.createdResponse());
+                    writer.flush();
+                    writer.close();
+                } 
+                else{ // unsucessful in createing new file
+                    //TODO commented out to compile
+//                    writer.write(badRequest());
+                    writer.flush();
+                    writer.close();
+                }
             }
-            else{
-                //writer.write(this.notFoundResponse());
+            else{ // file already exist
+                //TODO commented out to compile
+//                writer.write(okResponse());
                 writer.flush();
                 writer.close();
             }
@@ -59,5 +72,4 @@ public class HeadRequestService extends Response{
             e.printStackTrace();
         }
     }
-    
 }

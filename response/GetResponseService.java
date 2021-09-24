@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-public class GetRequestService extends Response{
+public class GetResponseService extends ResponseService {
     private Request request;
     private String uri;
     private FileReader fileReader;
@@ -20,7 +20,7 @@ public class GetRequestService extends Response{
     private HttpdConf httpdConf;
     private byte[] body;
 
-    public GetRequestService(Request request) {
+    public GetResponseService(Request request) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();

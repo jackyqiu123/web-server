@@ -1,14 +1,12 @@
 package response;
-
 import request.HttpdConf;
 import request.MimeTypes;
 import request.Request;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-public class PostRequestService extends Response{
+public class HeadResponseService extends ResponseService {
 
     private Request request;
     private String uri;
@@ -23,7 +21,7 @@ public class PostRequestService extends Response{
     private MimeTypes mime;
     private byte[] body;
 
-    public PostRequestService(Request request) {
+    public HeadResponseService(Request request) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
@@ -40,29 +38,19 @@ public class PostRequestService extends Response{
             }
         }
     }
-    public void sendResponse(){
-    //TODO create the file
+    public void sendResponse(){ // basically the same response for Get but does not return file contents and body
+    //TODO see if file exists
     //TODO respond with response code by calling the ResponseService class
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
+            //TODO commented lines out because they did not compile
             if(isValidFile(file)){
-                String byteString = new String(this.body, StandardCharsets.UTF_8);
-                if(byteString == ""){
-                    //TODO commented out to compile
-//                    writer.write(this.okResponse());
-                    writer.flush();
-                    writer.close();
-                }
-                else{
-                    //TODO commented out to compile
-//                    writer.write(this.createdResponse());
-                    writer.flush();
-                    writer.close();
-                }
-            
+                //TODO commented out to compile
+//                writer.write(this.okResponse());
+                writer.flush();
+                writer.close();
             }
             else{
-                //TODO commented out to compile
-//                writer.write(this.forbiddenResponse());
+                //writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();
             }

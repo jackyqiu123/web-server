@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-public class DeleteRequestService extends Response{
+public class DeleteResponseService extends ResponseService {
     // possible responses are 202(Accepted), 204(No Content), 200(OK) for Delete request
     private Request request;
     private String uri;
@@ -18,7 +18,7 @@ public class DeleteRequestService extends Response{
     private Map<String, String> headers;
     private File file;
 
-    public DeleteRequestService(Request request) {
+    public DeleteResponseService(Request request) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
