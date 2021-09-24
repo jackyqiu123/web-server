@@ -30,6 +30,7 @@ public class PostRequestService extends Response{
         this.headers = request.getHeaders();
         this.file = new File(this.uri);
         this.body = request.getBody();
+        this.socket = request.getClient();
 
         if(this.isValidFile(this.file)){
             try {
