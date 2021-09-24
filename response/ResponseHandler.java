@@ -5,27 +5,26 @@ import request.Request;
 public class ResponseHandler {
 
     public void sendResponse(Request request) {
-        // TODO: send responses
-        DeleteResponseService deleteHandler = new DeleteResponseService(request);
-        GetResponseService getHandler = new GetResponseService(request);
-        HeadResponseService headHandler = new HeadResponseService(request);
-        PostResponseService postHandler = new PostResponseService(request);
-        PutResponseService putHandler = new PutResponseService(request);
         switch(request.getRequestType()){
 
-            case GET: 
+            case GET:
+                GetResponseService getHandler = new GetResponseService(request);
                 getHandler.sendResponse();
                 break;
-            case POST: 
+            case POST:
+                PostResponseService postHandler = new PostResponseService(request);
                 postHandler.sendResponse();
                 break;
-            case HEAD: 
+            case HEAD:
+                HeadResponseService headHandler = new HeadResponseService(request);
                 headHandler.sendResponse();
                 break;
             case DELETE:
+                DeleteResponseService deleteHandler = new DeleteResponseService(request);
                 deleteHandler.sendResponse();
                 break; 
-            case PUT: 
+            case PUT:
+                PutResponseService putHandler = new PutResponseService(request);
                 putHandler.sendResponse();
             default:
                 throw new IllegalStateException("Unexpected value: " + request.getRequestType());

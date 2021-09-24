@@ -26,12 +26,15 @@ public abstract class ResponseService {
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
         this.headers = request.getHeaders();
-        this.file = new File(this.uri);
+        this.file = new File(request.getUri());
         this.body = request.getBody();
         this.socket = request.getClient();
     }
 
     public Boolean isValidFile(File file){
+        if (file == null) {
+            return false;
+        }
         return file.exists() && !file.isDirectory();
     }
 
