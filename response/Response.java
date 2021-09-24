@@ -17,22 +17,16 @@ public abstract class Response {
     private Socket socket;
     private Map<String, String> headers;
     private File file;
+    private byte[] body;
 
     private String fileSize;
     private String httpVersion;
     
 
     public Boolean isValidFile(Request request, File file){
-        // if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
-        // this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
-        //     return false;
-        // }
-        // if(file.exists() && !file.isDirectory()){
-        //     return true;
-        // }
-        // return true;
         return file.exists() && !file.isDirectory();
     }
+
     public String noContentResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
@@ -52,6 +46,7 @@ public abstract class Response {
         String responseBytes = response.toString();
         return responseBytes;
     }
+
     public String notFoundResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
