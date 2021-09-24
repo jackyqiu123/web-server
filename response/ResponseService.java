@@ -20,11 +20,21 @@ public abstract class ResponseService {
     private String fileSize;
     private String httpVersion;
     private byte[] body;
-    
+
+    public ResponseService(Request request) {
+        this.request = request;
+        this.uri = request.getUri();
+        this.requestType = request.getRequestType().toString();
+        this.headers = request.getHeaders();
+        this.file = new File(this.uri);
+        this.body = request.getBody();
+        this.socket = request.getClient();
+    }
 
     public Boolean isValidFile(File file){
         return file.exists() && !file.isDirectory();
     }
+
     public String noContentResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
@@ -44,6 +54,7 @@ public abstract class ResponseService {
         String responseBytes = response.toString();
         return responseBytes;
     }
+
     public String notFoundResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
@@ -100,6 +111,7 @@ public abstract class ResponseService {
         String responseString = response.toString();
         return responseString;
     }
+
     public String badRequest(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
@@ -110,8 +122,8 @@ public abstract class ResponseService {
         response.append("Date: " + date );
         String responseString = response.toString();
         return responseString;
-
     }
+
     public String unauthorizedResponse(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
@@ -124,6 +136,7 @@ public abstract class ResponseService {
         String responseString = response.toString();
         return responseString;
     }
+
     public String forbiddenResponse(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
@@ -136,6 +149,7 @@ public abstract class ResponseService {
         String responseString = response.toString();
         return responseString;
     }
+
     public String getFileContents() throws IOException {
         byte[] contents = Files.readAllBytes(this.file.toPath());
         String contentString = contents.toString();

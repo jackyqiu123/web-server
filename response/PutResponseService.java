@@ -6,7 +6,7 @@ import request.Request;
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
-public class PutResponseService {
+public class PutResponseService extends ResponseService {
 
     private Request request;
     private String uri;
@@ -21,13 +21,7 @@ public class PutResponseService {
     private byte[] body;
 
     public PutResponseService(Request request) {
-        this.request = request;
-        this.uri = request.getUri();
-        this.requestType = request.getRequestType().toString();
-        this.headers = request.getHeaders();
-        this.file = new File(this.uri);
-        this.body = request.getBody();
-        this.socket = request.getClient();
+        super(request);
 
         if(this.isValidFile(request, this.file)){
             try {

@@ -22,13 +22,7 @@ public class HeadResponseService extends ResponseService {
     private byte[] body;
 
     public HeadResponseService(Request request) {
-        this.request = request;
-        this.uri = request.getUri();
-        this.requestType = request.getRequestType().toString();
-        this.headers = request.getHeaders();
-        this.file = new File(this.uri);
-        this.body = request.getBody();
-        this.socket = request.getClient();
+        super(request);
 
         if(this.isValidFile(file)){
             try {

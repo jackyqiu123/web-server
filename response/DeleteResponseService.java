@@ -19,12 +19,7 @@ public class DeleteResponseService extends ResponseService {
     private File file;
 
     public DeleteResponseService(Request request) {
-        this.request = request;
-        this.uri = request.getUri();
-        this.requestType = request.getRequestType().toString();
-        this.headers = request.getHeaders();
-        this.file = new File(this.uri);
-        this.socket = request.getClient();
+        super(request);
 
         if(this.isValidFile(file)){
             try {
