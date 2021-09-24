@@ -77,7 +77,7 @@ public abstract class Response {
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         //TODO commented out to compile
-//        response.append("Content-Type: " + mime + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
         //TODO changed this.url to this.uri ???
         response.append("Content-Location: " + this.uri);
         //TODO add return to compile
@@ -100,7 +100,7 @@ public abstract class Response {
         response.append("Date: " + date );
         response.append("Content-Length: " + this.body.toString().length() + "\r\n");
         //TODO commented out to compile
-//        response.append("Content-Type: " + this.mime + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
         response.append("Content-Location: " + this.uri);
         String responseString = response.toString();
         return responseString;
