@@ -22,6 +22,7 @@ public abstract class Response {
     private String httpVersion;
     
 
+<<<<<<< HEAD
     public Boolean isValidFile(Request request, File file){
         // if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
         // this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
@@ -31,6 +32,9 @@ public abstract class Response {
         //     return true;
         // }
         // return true;
+=======
+    public Boolean isValidFile(File file){
+>>>>>>> 6d225e112c4a3eba8e2e571ab9b61d4c288eadb5
         return file.exists() && !file.isDirectory();
     }
     public String noContentResponse(){
