@@ -32,7 +32,7 @@ public abstract class Response {
         }
         return true;
     }
-    public byte[] noContentResponse(){
+    public String noContentResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
         //TODO commented out to compile
@@ -49,10 +49,10 @@ public abstract class Response {
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.uri);
-        byte[] responseBytes = response.toString().getBytes();
+        String responseBytes = response.toString().getBytes();
         return responseBytes;
     }
-    public byte[] notFoundResponse(){
+    public String notFoundResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
         //TODO commented out to compile
@@ -66,11 +66,11 @@ public abstract class Response {
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
 
-        byte[] responseBytes = response.toString().getBytes();
+        String responseBytes = response.toString().getBytes();
         return responseBytes;
     }
 
-    public byte[] createdResponse(){
+    public String createdResponse(){
         StringBuilder response = new StringBuilder();
         // String mime = this.headers.get("Content-Type");
         //TODO commented out to compile
@@ -87,11 +87,11 @@ public abstract class Response {
         //TODO changed this.url to this.uri ???
         response.append("Content-Location: " + this.uri);
         //TODO add return to compile
-        byte[] responseBytes = response.toString().getBytes();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
     }
 
-    public byte[] okResponse(){
+    public String okResponse(){
         StringBuilder response = new StringBuilder();
         Date date = new Date();
         // String mime = this.headers.get("Content-Type");
@@ -108,10 +108,10 @@ public abstract class Response {
         //TODO commented out to compile
 //        response.append("Content-Type: " + this.mime + "\r\n");
         response.append("Content-Location: " + this.uri);
-        byte[] responseBytes = response.toString().getBytes();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
     }
-    public byte[] badRequest(){
+    public String badRequest(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
         Date date = new Date();
@@ -119,11 +119,11 @@ public abstract class Response {
         this.statusReason = "BAD REQUEST";
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
-        byte[] responseBytes = response.toString().getBytes();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
 
     }
-    public byte[] unauthorizedResponse(){
+    public String unauthorizedResponse(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 401;
@@ -132,10 +132,10 @@ public abstract class Response {
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         response.append("WWW-Authenticate: Basic \r\n"); // property can vary
-        byte[] responseBytes = response.toString().getBytes();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
     }
-    public byte[] forbiddenResponse(){
+    public String forbiddenResponse(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();
         Date date = new Date();
@@ -144,11 +144,12 @@ public abstract class Response {
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
         //TODO add return to compile
-        byte[] responseBytes = response.toString().getBytes();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
     }
-    public byte[] getFileContents() throws IOException {
+    public String getFileContents() throws IOException {
         byte[] contents = Files.readAllBytes(this.file.toPath());
-        return contents;
+        String contentString = contents.toString();
+        return contentString;
     }
 }

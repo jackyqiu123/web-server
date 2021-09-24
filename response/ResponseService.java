@@ -25,11 +25,21 @@ public class ResponseService {
         PostRequestService postHandler = new PostRequestService(request);
         PutRequestService putHandler = new PutRequestService(request);
         switch(request.getRequestType()){
-            case GET: // getHandler executes method
-            case POST: // post Handler executes method
-            case HEAD: // headHandler executes method
-            case DELETE: // deleteHandler executes method
-            case PUT: // putHandler executes method
+
+            case GET: 
+                getHandler.sendResponse(request);
+                break;
+            case POST: 
+                postHandler.sendResponse(request);
+                break;
+            case HEAD: 
+                headHandler.sendResponse(request);
+                break;
+            case DELETE:
+                deleteHandler.sendResponse(request);
+                break; 
+            case PUT: 
+                putHandler.sendResponse(request);
             default:
                 throw new IllegalStateException("Unexpected value: " + request.getRequestType());
         }
