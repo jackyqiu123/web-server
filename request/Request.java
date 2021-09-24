@@ -39,9 +39,6 @@ public class Request {
         Boolean inBody = false;
 
         while ((inputLine = in.readLine()) != null) {
-
-            System.out.println(inputLine);
-
             if (inBody) {
                 if (inputLine.equals("")) {
                     break;
