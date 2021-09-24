@@ -4,7 +4,7 @@ import java.util.*;
 import java.io.*;
 
 public class MimeTypes{
-    private HashMap<String, String> mediaType;
+    private HashMap<String, String> mimeTypes;
     private File file;
     private BufferedReader bufferedReader;
     public MimeTypes(String mimeFile){
@@ -14,7 +14,7 @@ public class MimeTypes{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        this.mediaType = new HashMap<String, String>();
+        this.mimeTypes = new HashMap<String, String>();
     }
     public void execute(){
         try{
@@ -30,7 +30,7 @@ public class MimeTypes{
                 mime = tokens.nextToken();
                 while(tokens.hasMoreTokens()){
                     ext = tokens.nextToken();
-                    this.mediaType.put(ext, mime);
+                    this.mimeTypes.put(ext, mime);
                 }
                 line = this.bufferedReader.readLine();
             }
@@ -41,14 +41,8 @@ public class MimeTypes{
 
 
     }
-    
-    public String getMime(String ext){
-        String mime = mediaType.get(ext);
-        if(mime == null){
-            return "text/plain";
-        }
-        else{
-            return mime;
-        }
+
+    public Map<String, String> getMimeTypes() {
+        return mimeTypes;
     }
 }

@@ -12,10 +12,10 @@ public class WebServer{
     final String HTTPD_CONF_FILE = "./config/httpd.conf";
     final String MIME_TYPES_FILE = "./config/mime.types";
     HttpdConf httpdConfig = new HttpdConf(HTTPD_CONF_FILE);
-    MimeTypes mime = new MimeTypes(MIME_TYPES_FILE);
+    MimeTypes mimes = new MimeTypes(MIME_TYPES_FILE);
 
     httpdConfig.execute();
-    mime.execute();
+    mimes.execute();
 
     int port = DEFAULT_PORT;
 
@@ -30,7 +30,7 @@ public class WebServer{
       Socket clientSocket = serverSocket.accept();
     
       Runnable worker = new request.Worker(clientSocket, httpdConfig.gethttpdMap().get("DocumentRoot"),
-              httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap(), httpdConfig.gethttpdMap().get("LogFile"));
+              httpdConfig.getAliasMap(),httpdConfig.getScriptAliasMap(), httpdConfig.gethttpdMap().get("LogFile"), mimes);
       Thread thread = new Thread(worker);
       thread.start();
 //      TODO run runnable without thread for testing

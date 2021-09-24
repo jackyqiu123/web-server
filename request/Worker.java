@@ -19,6 +19,7 @@ public class Worker implements Runnable {
 
     private Map<String, String> aliases;
     private Map<String, String> scriptAliases;
+    private MimeTypes mimes;
 
     private Logger logger;
 
@@ -26,12 +27,14 @@ public class Worker implements Runnable {
                   String documentRoot,
                   Map<String, String> aliases,
                   Map<String, String> scriptAliases,
-                  String logFileLocation) {
+                  String logFileLocation,
+                  MimeTypes mimes) {
         this.client = client;
         this.documentRoot = documentRoot;
         this.aliases = aliases;
         this.scriptAliases = scriptAliases;
         this.logger = new Logger(logFileLocation);
+        this.mimes = mimes;
     }
 
     public void run() {
@@ -39,7 +42,7 @@ public class Worker implements Runnable {
 
         logger.setDate();
 
-        request = new Request(client, logger);
+        request = new Request(client, logger, mimes);
 
         try {
             responseCode = request.parseAll();

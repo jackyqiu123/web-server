@@ -110,6 +110,7 @@ public abstract class Response {
         String responseString = response.toString();
         return responseString;
     }
+
     public String badRequest(){
         StringBuilder response = new StringBuilder();
         String httpVersion = this.request.getHttpVersion();

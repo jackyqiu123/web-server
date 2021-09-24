@@ -16,13 +16,15 @@ public class Request {
 
     private Socket client;
     private Logger logger;
+    private MimeTypes mimes;
 
     private Map<String, String> headers;
     private byte[] body = new byte[0];
 
-    public Request(Socket client, Logger logger) {
+    public Request(Socket client, Logger logger, MimeTypes mimes) {
         this.client = client;
         this.logger = logger;
+        this.mimes = mimes;
 
         headers = new HashMap<>();
     }
@@ -155,9 +157,13 @@ public class Request {
         return body;
     }
 
-    public String getUriFileExtension() {
-        //TODO check
+    public String getMimeType() {
+        Map<String, String> mimeTypes = mimes.getMimeTypes();
         String uriExtension = uri.split("\\.")[1];
-        return uriExtension;
+        if (mimeTypes.containsKey(uriExtension)) {
+            return mimeTypes.get(uriExtension);
+        } else {
+            return "text/text";
+        }
     }
 }
