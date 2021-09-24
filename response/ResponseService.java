@@ -7,19 +7,19 @@ import java.util.*;
 import java.nio.file.Files;
 
 public abstract class ResponseService {
-    private Request request;
-    private HttpdConf httpdConf;
-    private String uri;
+    private final Request request;
+    //private HttpdConf httpdConf;
+    private final String uri;
     private FileReader fileReader;
     private int statusCode;
     private String statusReason;
-    private String requestType;
-    private Socket socket;
-    private Map<String, String> headers;
-    private File file;
+    private final String requestType;
+    private final Socket socket;
+    private final Map<String, String> headers;
+    private final File file;
     private String fileSize;
     private String httpVersion;
-    private byte[] body;
+    private final byte[] body;
 
     public ResponseService(Request request) {
         this.request = request;
@@ -29,6 +29,14 @@ public abstract class ResponseService {
         this.file = new File(request.getUri());
         this.body = request.getBody();
         this.socket = request.getClient();
+
+        if(isValidFile(file)){
+            try {
+                this.fileReader = new FileReader(this.uri);
+            } catch (FileNotFoundException e) {
+                //TODO appropriate error handling
+            }
+        }
     }
 
     public Boolean isValidFile(File file){
@@ -157,5 +165,49 @@ public abstract class ResponseService {
         byte[] contents = Files.readAllBytes(this.file.toPath());
         String contentString = contents.toString();
         return contentString;
+    }
+
+    Request getRequest() {
+        return request;
+    }
+
+    String getUri() {
+        return uri;
+    }
+
+    int getStatusCode() {
+        return statusCode;
+    }
+
+    String getStatusReason() {
+        return statusReason;
+    }
+
+    String getRequestType() {
+        return requestType;
+    }
+
+    Socket getSocket() {
+        return socket;
+    }
+
+    Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    File getFile() {
+        return file;
+    }
+
+    String getFileSize() {
+        return fileSize;
+    }
+
+    String getHttpVersion() {
+        return httpVersion;
+    }
+
+    byte[] getBody() {
+        return body;
     }
 }

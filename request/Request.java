@@ -24,6 +24,7 @@ public class Request {
     public Request(Socket client, Logger logger, MimeTypes mimes) {
         this.client = client;
         this.logger = logger;
+        this.mimes = mimes;
 
         headers = new HashMap<>();
     }

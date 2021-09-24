@@ -6,7 +6,6 @@ public class ResponseHandler {
 
     public void sendResponse(Request request) {
         switch(request.getRequestType()){
-
             case GET:
                 GetResponseService getHandler = new GetResponseService(request);
                 getHandler.sendResponse();
@@ -29,6 +28,5 @@ public class ResponseHandler {
             default:
                 throw new IllegalStateException("Unexpected value: " + request.getRequestType());
         }
-
     }
 }
