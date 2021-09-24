@@ -4,6 +4,7 @@ import authentication.Authenticator;
 import logging.Logger;
 import resource.ResourceChecker;
 import response.ResponseCode;
+import response.ResponseService;
 
 import java.io.*;
 import java.net.Socket;
@@ -77,6 +78,8 @@ public class Worker implements Runnable {
         }
 
         // TODO call appropriate RequestService & call logger in the end
+        ResponseService responseService = new ResponseService();
+        responseService.sendResponse(request);
     }
 
     private void handleError(ResponseCode responseCode) {
