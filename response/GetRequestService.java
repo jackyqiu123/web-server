@@ -45,8 +45,8 @@ public class GetRequestService extends Response{
             //TODO commented lines out because they did not compile
             if(isValidFile(this.request, this.file)){
                 writer.write(this.okResponse());
-                writer.write(this.getFileContent());
-                writer.write(this.body); // server return the body content of the request
+                writer.write(this.getFileContents());
+                writer.write(this.body.toString()); // server return the body content of the request
                 writer.flush();
                 writer.close();
             }
