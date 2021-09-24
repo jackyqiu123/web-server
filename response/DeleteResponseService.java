@@ -3,60 +3,38 @@ package response;
 import request.Request;
 
 import java.io.*;
-import java.net.Socket;
-import java.util.Map;
 
 public class DeleteResponseService extends ResponseService {
     // possible responses are 202(Accepted), 204(No Content), 200(OK) for Delete request
-    private Request request;
-    private String uri;
-    private FileReader fileReader;
-    private int statusCode;
-    private String statusReason;
-    private String requestType;
-    private Socket socket;
-    private Map<String, String> headers;
-    private File file;
 
     public DeleteResponseService(Request request) {
         super(request);
-
-        if(this.isValidFile(file)){
-            try {
-                this.fileReader = new FileReader(this.uri);
-            } catch (FileNotFoundException e) {
-                //TODO appropriate error handling
-            }
-        }
     }
 
     public void sendResponse(){
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-            // String mime = headers.get("Content-Type");
-            // String fileSize = headers.get("Content-Length");
-            // String httpVersion = request.getHttpVersion();
-            String fileSize = null; //TODO idk what this should be
-            if((fileSize == null || fileSize == "0") && this.isValidFile(file)){
-                // this.statusCode = 204;
-                // this.statusReason = "NO CONTENT";
-                // writer.write(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-                // writer.write("Content-Length: " + fileSize + "\r\n");
-                // writer.write("Content-Type: " + mime + "\r\n");
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()))) {
+            int fileSize = this.body.toString().length();
+            String httpVersion = request.getHttpVersion();
 
-                //TODO commented out to compile:
-                //writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
-                this.file.delete();
+            if((fileSize == 0) && this.isValidFile(this.file)){
+                 this.statusCode = 204;
+                 this.statusReason = "NO CONTENT";
+                 writer.write(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+                 writer.write("Content-Length: " + fileSize + "\r\n");
+                 writer.write("Content-Type: " + request.getMimeType() + "\r\n");
+
+                writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
+                this.getFile().delete();
                 writer.flush();
                 writer.close();
             }
             else{ // send 404 Not Found
-                // this.statusCode = 404;
-                // this.statusReason = "NOT FOUND";
-                // writer.write(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-                // writer.write("Content-Type: " + mime + "\r\n");
+                 this.statusCode = 404;
+                 this.statusReason = "NOT FOUND";
+                 writer.write(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+                 writer.write("Content-Type: " + request.getMimeType() + "\r\n");
 
-                //TODO commented out to compile:
-                //writer.write(this.notFoundResponse());
+                writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();
             }
@@ -64,8 +42,4 @@ public class DeleteResponseService extends ResponseService {
             e.printStackTrace();
         }
     }
-    //TODO delete the file
-    //TODO respond with response code by calling the ResponseService class
-
-
 }

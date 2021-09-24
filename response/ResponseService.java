@@ -7,19 +7,19 @@ import java.util.*;
 import java.nio.file.Files;
 
 public abstract class ResponseService {
-    private final Request request;
+    protected final Request request;
     //private HttpdConf httpdConf;
-    private final String uri;
-    private FileReader fileReader;
-    private int statusCode;
-    private String statusReason;
-    private final String requestType;
-    private final Socket socket;
-    private final Map<String, String> headers;
-    private final File file;
-    private String fileSize;
-    private String httpVersion;
-    private final byte[] body;
+    protected final String uri;
+    protected FileReader fileReader;
+    protected int statusCode;
+    protected String statusReason;
+    protected final String requestType;
+    protected final Socket socket;
+    protected final Map<String, String> headers;
+    protected final File file;
+    protected String fileSize;
+    protected String httpVersion;
+    protected final byte[] body;
 
     public ResponseService(Request request) {
         this.request = request;
