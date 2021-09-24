@@ -22,7 +22,6 @@ public abstract class Response {
     private String httpVersion;
     
 
-<<<<<<< HEAD
     public Boolean isValidFile(Request request, File file){
         // if((this.httpdConf.getAliasMap().exist("/ab/")|| this.httpdConf.getAliasMap().get("/ab/") == null)&& 
         // this.httpdConf.getAliasMap().get("/ab/").isEmpty() || this.httpdConf.getAliasMap().get("/~traciely/") == null){
@@ -32,9 +31,6 @@ public abstract class Response {
         //     return true;
         // }
         // return true;
-=======
-    public Boolean isValidFile(File file){
->>>>>>> 6d225e112c4a3eba8e2e571ab9b61d4c288eadb5
         return file.exists() && !file.isDirectory();
     }
     public String noContentResponse(){
@@ -43,14 +39,13 @@ public abstract class Response {
         //TODO commented out to compile
 //        String mime = this.getUriFileExtension();
         Date date = new Date();
-        String fileSize = this.headers.get("Content-Length");
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 204;
         this.statusReason = "NO CONTENT";
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
-        response.append("Content-Length: " + this.fileSize + "\r\n");
+        response.append("Content-Length: " + this.body.toString().length() + "\r\n");
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
         response.append("Content-Location: " + this.uri);
@@ -88,7 +83,6 @@ public abstract class Response {
         response.append("Date: " + date );
         //TODO commented out to compile
 //        response.append("Content-Type: " + mime + "\r\n");
-        response.append("Content-Location: " + this.uri);
         //TODO changed this.url to this.uri ???
         response.append("Content-Location: " + this.uri);
         //TODO add return to compile
@@ -109,7 +103,7 @@ public abstract class Response {
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date );
-        response.append("Content-Length: " + this.fileSize + "\r\n");
+        response.append("Content-Length: " + this.body.toString().length() + "\r\n");
         //TODO commented out to compile
 //        response.append("Content-Type: " + this.mime + "\r\n");
         response.append("Content-Location: " + this.uri);
