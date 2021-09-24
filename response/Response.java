@@ -85,10 +85,8 @@ public abstract class Response {
     public String okResponse(){
         StringBuilder response = new StringBuilder();
         Date date = new Date();
-        // String mime = this.headers.get("Content-Type");
-        //TODO commented out to compile
-        String mime = request.getMimeType();
-        int fileSize = body.toString().length();
+        String mime = this.request.getMimeType();
+        int fileSize = this.body.toString().length();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 200;
         this.statusReason = "OK";

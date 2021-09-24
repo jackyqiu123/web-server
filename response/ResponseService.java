@@ -7,7 +7,7 @@ public class ResponseService {
 
     public void sendResponse(Request request) {
         // TODO: send responses
-        DeleteRequestService deleteHandler = new  DeleteRequestService (request);
+        DeleteRequestService deleteHandler = new DeleteRequestService(request);
         GetRequestService getHandler = new GetRequestService(request);
         HeadRequestService headHandler = new HeadRequestService(request);
         PostRequestService postHandler = new PostRequestService(request);
