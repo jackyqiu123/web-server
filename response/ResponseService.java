@@ -144,6 +144,7 @@ public abstract class ResponseService {
         return responseString;
     }
 
+    //TODO fix error with images
     public List<String> getFileContents() throws IOException {
         List<String> content = Files.readAllLines(file.toPath());
 
