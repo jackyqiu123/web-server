@@ -8,7 +8,6 @@ import java.nio.file.Files;
 
 public abstract class ResponseService {
     protected final Request request;
-    //private HttpdConf httpdConf;
     protected final String uri;
     protected FileReader fileReader;
     protected int statusCode;
@@ -48,37 +47,29 @@ public abstract class ResponseService {
 
     public String noContentResponse(){
         StringBuilder response = new StringBuilder();
-        // String mime = this.headers.get("Content-Type");
-        //TODO commented out to compile
-//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 204;
         this.statusReason = "NO CONTENT";
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
+        response.append("Date: " + date + "\r\n");
         response.append("Content-Length: " + this.body.toString().length() + "\r\n");
-        //TODO commented out to compile
-//        response.append("Content-Type: " + mime + "\r\n");
-        response.append("Content-Location: " + this.uri);
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+        response.append("Content-Location: " + this.uri + "\r\n");
         String responseBytes = response.toString();
         return responseBytes;
     }
 
     public String notFoundResponse(){
         StringBuilder response = new StringBuilder();
-        // String mime = this.headers.get("Content-Type");
-        //TODO commented out to compile
-//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 404;
         this.statusReason = "NOT FOUND";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
-        //TODO commented out to compile
-//        response.append("Content-Type: " + mime + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
 
         String responseBytes = response.toString();
         return responseBytes;
@@ -86,20 +77,14 @@ public abstract class ResponseService {
 
     public String createdResponse(){
         StringBuilder response = new StringBuilder();
-        // String mime = this.headers.get("Content-Type");
-        //TODO commented out to compile
-//        String mime = this.getUriFileExtension();
         Date date = new Date();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 201;
         this.statusReason = "CREATED";
         response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
-        //TODO commented out to compile
-//        response.append("Content-Type: " + mime + "\r\n");
-        //TODO changed this.url to this.uri ???
-        response.append("Content-Location: " + this.uri);
-        //TODO add return to compile
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+        response.append("Content-Location: " + this.uri + "\r\n");
         String responseString = response.toString();
         return responseString;
     }
@@ -107,18 +92,16 @@ public abstract class ResponseService {
     public String okResponse(){
         StringBuilder response = new StringBuilder();
         Date date = new Date();
-        String mime = this.request.getMimeType();
-        int fileSize = this.body.toString().length();
         String httpVersion = this.request.getHttpVersion();
         this.statusCode = 200;
         this.statusReason = "OK";
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
+        response.append("Date: " + date + "\r\n");
         response.append("Content-Length: " + this.body.toString().length() + "\r\n");
-        //TODO commented out to compile
-//        response.append("Content-Type: " + this.mime + "\r\n");
-        response.append("Content-Location: " + this.uri);
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+        response.append("Content-Location: " + this.uri + "\r\n");
+        response.append("\r\n");
         String responseString = response.toString();
         return responseString;
     }
@@ -130,7 +113,7 @@ public abstract class ResponseService {
         this.statusCode = 400;
         this.statusReason = "BAD REQUEST";
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
+        response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
         return responseString;
     }
@@ -142,7 +125,7 @@ public abstract class ResponseService {
         this.statusReason = "UNAUTHORIZED";
         Date date = new Date();
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
+        response.append("Date: " + date + "\r\n");
         response.append("WWW-Authenticate: Basic \r\n"); // property can vary
         String responseString = response.toString();
         return responseString;
@@ -155,8 +138,7 @@ public abstract class ResponseService {
         this.statusCode = 403;
         this.statusReason = "FORBIDDEN";
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date );
-        //TODO add return to compile
+        response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
         return responseString;
     }

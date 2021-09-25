@@ -11,11 +11,7 @@ public class GetResponseService extends ResponseService {
     }
 
     public void sendResponse(){
-    //TODO get the file
-    //TODO respond with response code and file-body by calling the ResponseService class
-    
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))){
-            //TODO commented lines out because they did not compile
             if(isValidFile(this.file)){
                 writer.write(this.okResponse());
                 writer.write(this.getFileContents());
@@ -24,7 +20,7 @@ public class GetResponseService extends ResponseService {
                 writer.close();
             }
             else{
-                //writer.write(this.notFoundResponse());
+                writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();
             }
@@ -32,8 +28,5 @@ public class GetResponseService extends ResponseService {
         catch(IOException e){
             e.printStackTrace();
         }
-        
-
     }
-    
 }
