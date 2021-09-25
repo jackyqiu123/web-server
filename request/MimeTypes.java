@@ -26,7 +26,8 @@ public class MimeTypes{
                     line = this.bufferedReader.readLine();
                     continue;
                 }
-                StringTokenizer tokens = new StringTokenizer(line); 
+                StringTokenizer tokens = new StringTokenizer(line);
+
                 mime = tokens.nextToken();
                 while(tokens.hasMoreTokens()){
                     ext = tokens.nextToken();

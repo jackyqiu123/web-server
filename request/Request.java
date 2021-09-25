@@ -156,6 +156,7 @@ public class Request {
     public String getMimeType() {
         Map<String, String> mimeTypes = mimes.getMimeTypes();
         String uriExtension = uri.split("\\.")[1];
+        uriExtension.replace("/",  "");
         if (mimeTypes.containsKey(uriExtension)) {
             return mimeTypes.get(uriExtension);
         } else {
