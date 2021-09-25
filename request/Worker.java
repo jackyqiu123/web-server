@@ -5,6 +5,7 @@ import logging.Logger;
 import resource.ResourceChecker;
 import response.ResponseCode;
 import response.ResponseHandler;
+import response.ResponseService;
 
 import java.io.*;
 import java.net.Socket;
@@ -87,6 +88,30 @@ public class Worker implements Runnable {
 
     private void handleError(ResponseCode responseCode) {
         //TODO: implement
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))){
+            ResponseService responseService = new ResponseService(request);
+
+            switch (responseCode) {
+                case CODE400:
+                    writer.write(responseService.badRequest());
+                    break;
+                case CODE401:
+                    writer.write(responseService.unauthorizedResponse());
+                    break;
+                case CODE403:
+                    writer.write(responseService.forbiddenResponse());
+                    break;
+                case CODE404:
+                    writer.write(responseService.notFoundResponse());
+                    break;
+                case CODE500:
+                    writer.write(responseService.internalServerError());
+                    break;
+            }
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

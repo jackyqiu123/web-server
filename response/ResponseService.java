@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.*;
 import java.nio.file.Files;
 
-public abstract class ResponseService {
+public class ResponseService {
     protected final Request request;
     protected final String uri;
     protected FileReader fileReader;
@@ -139,6 +139,18 @@ public abstract class ResponseService {
         this.statusCode = 403;
         this.statusReason = "FORBIDDEN";
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        String responseString = response.toString();
+        return responseString;
+    }
+
+    public String internalServerError(){
+        StringBuilder response = new StringBuilder();
+        String httpVersion = request.getHttpVersion();
+        Date date = new Date();
+        this.statusCode = 500;
+        this.statusReason = "INTERNAL SERVER ERROR";
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
         return responseString;
