@@ -3,6 +3,7 @@ package response;
 import request.Request;
 
 import java.io.*;
+import java.util.List;
 
 public class GetResponseService extends ResponseService {
 
@@ -13,9 +14,17 @@ public class GetResponseService extends ResponseService {
     public void sendResponse(){
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))){
             if(isValidFile(this.file)){
+                List<String> body = getFileContents();
+
                 writer.write(this.okResponse());
-                writer.write(this.getFileContents());
+
+                for (String line : body) {
+                    writer.write(line);
+                }
+
+                //TODO do we need this??
                 writer.write(this.body.toString()); // server return the body content of the request
+
                 writer.flush();
                 writer.close();
             }

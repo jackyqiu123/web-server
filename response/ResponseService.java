@@ -19,6 +19,7 @@ public abstract class ResponseService {
     protected String fileSize;
     protected String httpVersion;
     protected final byte[] body;
+    protected int contentLength = 0;
 
     public ResponseService(Request request) {
         this.request = request;
@@ -54,7 +55,7 @@ public abstract class ResponseService {
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
-        response.append("Content-Length: " + this.body.toString().length() + "\r\n");
+        response.append("Content-Length: " + contentLength + "\r\n");
         response.append("Content-Type: " + request.getMimeType() + "\r\n");
         response.append("Content-Location: " + this.uri + "\r\n");
         String responseBytes = response.toString();
@@ -98,7 +99,7 @@ public abstract class ResponseService {
 
         response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
-        response.append("Content-Length: " + this.body.toString().length() + "\r\n");
+        response.append("Content-Length: " + contentLength + "\r\n");
         response.append("Content-Type: " + request.getMimeType() + "\r\n");
         response.append("Content-Location: " + this.uri + "\r\n");
         response.append("\r\n");
@@ -143,10 +144,16 @@ public abstract class ResponseService {
         return responseString;
     }
 
-    public String getFileContents() throws IOException {
-        byte[] contents = Files.readAllBytes(this.file.toPath());
-        String contentString = contents.toString();
-        return contentString;
+    public List<String> getFileContents() throws IOException {
+        List<String> content = Files.readAllLines(file.toPath());
+
+        int contentLengthCounter = 0;
+        for (String line : content) {
+            contentLengthCounter += line.length();
+        }
+        contentLength = contentLengthCounter;
+
+        return content;
     }
 
     Request getRequest() {
