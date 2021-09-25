@@ -16,6 +16,9 @@ public class GetResponseService extends ResponseService {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))){
             if(isValidFile(this.file)){
 
+                String testMime = request.getMimeType();
+                String testUri = request.getUri();
+
                 if (request.getMimeType().contains("text")) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());

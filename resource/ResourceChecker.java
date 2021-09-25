@@ -35,6 +35,8 @@ public class ResourceChecker {
 
         uri = aliaseUri(uriParts);
 
+        uri = uri.replace("//", "/");
+
         File file = new File(uri);
 
         if (!file.exists() && !file.isDirectory()) {
