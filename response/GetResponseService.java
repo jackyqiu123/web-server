@@ -28,6 +28,7 @@ public class GetResponseService extends ResponseService {
                 } else {
                     byte[] body = getFileContentsBytes();
                     writer.write(this.okResponse());
+                    //TODO
                     writer.write(Arrays.toString(body));
                 }
 
