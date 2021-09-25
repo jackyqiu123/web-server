@@ -12,12 +12,11 @@ public class HeadResponseService extends ResponseService {
 
     public void sendResponse(){ // basically the same response for Get but does not return file contents and body
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            if(isValidFile(this.file)){
+            if (isValidFile(this.file)){
                 writer.write(this.okResponse());
                 writer.flush();
                 writer.close();
-            }
-            else{
+            } else {
                 writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();

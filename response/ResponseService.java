@@ -145,7 +145,7 @@ public abstract class ResponseService {
     }
 
     //TODO fix error with images
-    public List<String> getFileContents() throws IOException {
+    public List<String> getFileContentsText() throws IOException {
         List<String> content = Files.readAllLines(file.toPath());
 
         int contentLengthCounter = 0;
@@ -153,6 +153,14 @@ public abstract class ResponseService {
             contentLengthCounter += line.length();
         }
         contentLength = contentLengthCounter;
+
+        return content;
+    }
+
+    public byte[] getFileContentsBytes() throws IOException {
+        byte[] content = Files.readAllBytes(file.toPath());
+
+        contentLength = content.length;
 
         return content;
     }

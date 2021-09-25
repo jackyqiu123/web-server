@@ -3,6 +3,7 @@ package response;
 import request.Request;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class GetResponseService extends ResponseService {
@@ -14,12 +15,17 @@ public class GetResponseService extends ResponseService {
     public void sendResponse(){
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))){
             if(isValidFile(this.file)){
-                List<String> body = getFileContents();
 
-                writer.write(this.okResponse());
-
-                for (String line : body) {
-                    writer.write(line);
+                if (request.getMimeType().contains("text")) {
+                    List<String> body = getFileContentsText();
+                    writer.write(this.okResponse());
+                    for (String line : body) {
+                        writer.write(line);
+                    }
+                } else {
+                    byte[] body = getFileContentsBytes();
+                    writer.write(this.okResponse());
+                    writer.write(Arrays.toString(body));
                 }
 
                 //TODO do we need this??

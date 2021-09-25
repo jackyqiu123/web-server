@@ -1,6 +1,5 @@
 package resource;
 
-import request.HttpdConf;
 import request.Request;
 import response.ResponseCode;
 
