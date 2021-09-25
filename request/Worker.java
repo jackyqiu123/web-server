@@ -48,16 +48,12 @@ public class Worker implements Runnable {
         try {
             responseCode = request.parseAll();
         } catch (IOException e) {
-            //TODO respond with error message
             handleError(responseCode);
-            System.out.println("ERROR - IO Exception");
             return;
         }
 
         if (responseCode != ResponseCode.CODE200) {
-            //TODO send response w/ error code
             handleError(responseCode);
-            System.out.println("ERROR - " + responseCode);
             return;
         }
 
@@ -65,9 +61,7 @@ public class Worker implements Runnable {
         responseCode = resourceChecker.checkUri(request);
 
         if (responseCode != ResponseCode.CODE200) {
-            //TODO send response w/ error code
             handleError(responseCode);
-            System.out.println("ERROR - " + responseCode);
             return;
         }
 
@@ -75,9 +69,7 @@ public class Worker implements Runnable {
         responseCode = authenticator.checkAuthentication();
 
         if (responseCode != ResponseCode.CODE200) {
-            //TODO send response w/ error code
             handleError(responseCode);
-            System.out.println("ERROR - " + responseCode);
             return;
         }
 
@@ -87,7 +79,6 @@ public class Worker implements Runnable {
     }
 
     private void handleError(ResponseCode responseCode) {
-        //TODO: implement
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))){
             ResponseService responseService = new ResponseService(request);
 

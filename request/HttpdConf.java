@@ -4,9 +4,6 @@ import java.util.*;
 import java.io.*;
 
 public class HttpdConf{
-    // Private String serverRoot;
-    // private String documentRoot;
-    // private String logFile;
     private HashMap<String,String> scriptAliasMap;
     private HashMap<String,String> httpdMap;
     private HashMap<String,String> aliasMap;
@@ -97,5 +94,4 @@ public class HttpdConf{
     public HashMap<String,String> gethttpdMap(){
         return this.httpdMap;
     }
-
 }

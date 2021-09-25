@@ -18,7 +18,7 @@ public class PutResponseService extends ResponseService {
                     writer.flush();
                     writer.close();
                 } 
-                else{ // unsucessful in createing new file
+                else{ // unsuccessful in creating new file
                     writer.write(badRequest());
                     writer.flush();
                     writer.close();

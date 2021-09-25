@@ -11,8 +11,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO cherry on top: store htpasswd password for later access on first parse
-
 public class Authenticator {
 
     private Request request;
