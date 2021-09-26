@@ -1,6 +1,7 @@
 package resource;
 
 import request.Request;
+import request.RequestType;
 import response.ResponseCode;
 
 import java.io.File;
@@ -26,6 +27,10 @@ public class ResourceChecker {
 
         if (uri.equals("/")) {
             request.setUri(documentRoot + getDirectoryIndexHeader(request));
+            return ResponseCode.CODE200;
+        }
+
+        if (request.getRequestType() == RequestType.POST || request.getRequestType() == RequestType.PUT) {
             return ResponseCode.CODE200;
         }
 

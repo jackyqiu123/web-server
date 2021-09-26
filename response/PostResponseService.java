@@ -26,8 +26,8 @@ public class PostResponseService extends ResponseService {
                     writer.flush();
                     writer.close();
                 }
-            }
-            else{
+            } else {
+
                 writer.write(this.forbiddenResponse());
                 writer.flush();
                 writer.close();

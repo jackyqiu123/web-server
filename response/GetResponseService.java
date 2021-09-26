@@ -4,9 +4,6 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 
 public class GetResponseService extends ResponseService {
@@ -17,7 +14,17 @@ public class GetResponseService extends ResponseService {
 
     public void sendResponse(){
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
+            String ifModifiedSince = "";
+            if (request.getHeaders().containsKey("If-Modified-Since")) {
+                ifModifiedSince = request.getHeaders().get("If-Modified-Since").toString();
+            }
+            //TODO convert ifModifiedSince to Date
+
             if(isValidFile(this.file)){
+                //TODO compare ifModifiedSince to file last modified date
+                //TODO if true -> return 304 response
+
+
                 if (request.getMimeType().contains("text")) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());
