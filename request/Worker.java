@@ -73,14 +73,15 @@ public class Worker implements Runnable {
             return;
         }
 
-        // TODO call appropriate RequestService & call logger in the end
         ResponseHandler responseHandler = new ResponseHandler();
-        responseHandler.sendResponse(request);
+        responseHandler.sendResponse(request, logger);
+
+        logger.logStatus();
     }
 
     private void handleError(ResponseCode responseCode) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))){
-            ResponseService responseService = new ResponseService(request);
+            ResponseService responseService = new ResponseService(request, logger);
 
             switch (responseCode) {
                 case CODE400:

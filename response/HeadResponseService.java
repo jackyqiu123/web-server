@@ -1,13 +1,14 @@
 package response;
 
+import logging.Logger;
 import request.Request;
 
 import java.io.*;
 
 public class HeadResponseService extends ResponseService {
 
-    public HeadResponseService(Request request) {
-        super(request);
+    public HeadResponseService(Request request, Logger logger) {
+        super(request, logger);
     }
 
     public void sendResponse(){ // basically the same response for Get but does not return file contents and body

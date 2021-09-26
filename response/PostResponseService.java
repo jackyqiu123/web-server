@@ -1,5 +1,6 @@
 package response;
 
+import logging.Logger;
 import request.Request;
 
 import java.io.*;
@@ -7,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 
 public class PostResponseService extends ResponseService {
 
-    public PostResponseService(Request request) {
-        super(request);
+    public PostResponseService(Request request, Logger logger) {
+        super(request, logger);
     }
 
     public void sendResponse(){

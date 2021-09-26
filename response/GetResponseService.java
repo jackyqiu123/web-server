@@ -1,5 +1,6 @@
 package response;
 
+import logging.Logger;
 import request.Request;
 
 import java.io.*;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public class GetResponseService extends ResponseService {
 
-    public GetResponseService(Request request) {
-        super(request);
+    public GetResponseService(Request request, Logger logger) {
+        super(request, logger);
     }
 
     public void sendResponse(){

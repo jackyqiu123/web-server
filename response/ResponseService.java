@@ -1,5 +1,6 @@
 package response;
 
+import logging.Logger;
 import request.*;
 import java.io.*;
 import java.net.Socket;
@@ -7,6 +8,7 @@ import java.util.*;
 import java.nio.file.Files;
 
 public class ResponseService {
+    protected final Logger logger;
     protected final Request request;
     protected final String uri;
     protected FileReader fileReader;
@@ -21,7 +23,7 @@ public class ResponseService {
     protected final byte[] body;
     protected int contentLength = 0;
 
-    public ResponseService(Request request) {
+    public ResponseService(Request request, Logger logger) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
@@ -29,6 +31,7 @@ public class ResponseService {
         this.file = new File(request.getUri());
         this.body = request.getBody();
         this.socket = request.getClient();
+        this.logger = logger;
 
         if(isValidFile(file)){
             try {
@@ -46,58 +49,16 @@ public class ResponseService {
         return file.exists() && !file.isDirectory();
     }
 
-    public String noContentResponse(){
-        StringBuilder response = new StringBuilder();
-        Date date = new Date();
-        String httpVersion = this.request.getHttpVersion();
-        this.statusCode = 204;
-        this.statusReason = "NO CONTENT";
-
-        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date + "\r\n");
-        response.append("Content-Length: " + contentLength + "\r\n");
-        response.append("Content-Type: " + request.getMimeType() + "\r\n");
-        response.append("Content-Location: " + this.uri + "\r\n");
-        String responseBytes = response.toString();
-        return responseBytes;
-    }
-
-    public String notFoundResponse(){
-        StringBuilder response = new StringBuilder();
-        Date date = new Date();
-        String httpVersion = this.request.getHttpVersion();
-        this.statusCode = 404;
-        this.statusReason = "NOT FOUND";
-        response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date + "\r\n");
-        response.append("Content-Type: " + request.getMimeType() + "\r\n");
-
-        String responseBytes = response.toString();
-        return responseBytes;
-    }
-
-    public String createdResponse(){
-        StringBuilder response = new StringBuilder();
-        Date date = new Date();
-        String httpVersion = this.request.getHttpVersion();
-        this.statusCode = 201;
-        this.statusReason = "CREATED";
-        response.append(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-        response.append("Date: " + date + "\r\n");
-        response.append("Content-Type: " + request.getMimeType() + "\r\n");
-        response.append("Content-Location: " + this.uri + "\r\n");
-        String responseString = response.toString();
-        return responseString;
-    }
-
     public String okResponse(){
         StringBuilder response = new StringBuilder();
         Date date = new Date();
-        String httpVersion = this.request.getHttpVersion();
-        this.statusCode = 200;
-        this.statusReason = "OK";
+        String httpVersion = request.getHttpVersion();
+        statusCode = 200;
+        statusReason = "OK";
 
-        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         response.append("Content-Length: " + contentLength + "\r\n");
         response.append("Content-Type: " + request.getMimeType() + "\r\n");
@@ -107,13 +68,51 @@ public class ResponseService {
         return responseString;
     }
 
+    public String createdResponse(){
+        StringBuilder response = new StringBuilder();
+        Date date = new Date();
+        String httpVersion = request.getHttpVersion();
+        statusCode = 201;
+        statusReason = "CREATED";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+        response.append("Content-Location: " + this.uri + "\r\n");
+        String responseString = response.toString();
+        return responseString;
+    }
+
+    public String noContentResponse(){
+        StringBuilder response = new StringBuilder();
+        Date date = new Date();
+        String httpVersion = this.request.getHttpVersion();
+        statusCode = 204;
+        statusReason = "NO CONTENT";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Length: " + contentLength + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+        response.append("Content-Location: " + uri + "\r\n");
+        String responseBytes = response.toString();
+        return responseBytes;
+    }
+
     public String badRequest(){
         StringBuilder response = new StringBuilder();
-        String httpVersion = this.request.getHttpVersion();
+        String httpVersion = request.getHttpVersion();
         Date date = new Date();
-        this.statusCode = 400;
-        this.statusReason = "BAD REQUEST";
-        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        statusCode = 400;
+        statusReason = "BAD REQUEST";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
         return responseString;
@@ -121,11 +120,14 @@ public class ResponseService {
 
     public String unauthorizedResponse(){
         StringBuilder response = new StringBuilder();
-        String httpVersion = this.request.getHttpVersion();
-        this.statusCode = 401;
-        this.statusReason = "UNAUTHORIZED";
+        String httpVersion = request.getHttpVersion();
+        statusCode = 401;
+        statusReason = "UNAUTHORIZED";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
         Date date = new Date();
-        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         response.append("WWW-Authenticate: Basic \r\n"); // property can vary
         String responseString = response.toString();
@@ -134,22 +136,45 @@ public class ResponseService {
 
     public String forbiddenResponse(){
         StringBuilder response = new StringBuilder();
-        String httpVersion = this.request.getHttpVersion();
+        String httpVersion = request.getHttpVersion();
         Date date = new Date();
-        this.statusCode = 403;
-        this.statusReason = "FORBIDDEN";
-        response.append(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+        statusCode = 403;
+        statusReason = "FORBIDDEN";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
         return responseString;
+    }
+
+    public String notFoundResponse(){
+        StringBuilder response = new StringBuilder();
+        Date date = new Date();
+        String httpVersion = request.getHttpVersion();
+        statusCode = 404;
+        statusReason = "NOT FOUND";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Type: " + request.getMimeType() + "\r\n");
+
+        String responseBytes = response.toString();
+        return responseBytes;
     }
 
     public String internalServerError(){
         StringBuilder response = new StringBuilder();
         String httpVersion = request.getHttpVersion();
         Date date = new Date();
-        this.statusCode = 500;
-        this.statusReason = "INTERNAL SERVER ERROR";
+        statusCode = 500;
+        statusReason = "INTERNAL SERVER ERROR";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
         response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
         response.append("Date: " + date + "\r\n");
         String responseString = response.toString();
@@ -164,6 +189,7 @@ public class ResponseService {
             contentLengthCounter += line.length();
         }
         contentLength = contentLengthCounter;
+        logger.setSizeOfObjectReturned(String.valueOf(contentLength));
 
         return content;
     }
@@ -172,6 +198,7 @@ public class ResponseService {
         byte[] content = Files.readAllBytes(file.toPath());
 
         contentLength = content.length;
+        logger.setSizeOfObjectReturned(String.valueOf(contentLength));
 
         return content;
     }

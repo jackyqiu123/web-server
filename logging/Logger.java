@@ -1,6 +1,7 @@
 package logging;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -38,10 +39,21 @@ public class Logger {
         result += " " + statusCode;
         result += " " + sizeOfObjectReturned;
 
+        File file = new File(logFileLocation);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                System.out.println("ERROR - while trying to create log file");
+                e.printStackTrace();
+            }
+        }
+
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFileLocation))) {
             writer.write(result);
         } catch (IOException e) {
             System.out.println("ERROR - while trying to write log into log file");
+            e.printStackTrace();
         }
 
         System.out.println(result);

@@ -1,5 +1,6 @@
 package response;
 
+import logging.Logger;
 import request.Request;
 
 import java.io.*;
@@ -7,8 +8,8 @@ import java.io.*;
 public class DeleteResponseService extends ResponseService {
     // possible responses are 202(Accepted), 204(No Content), 200(OK) for Delete request
 
-    public DeleteResponseService(Request request) {
-        super(request);
+    public DeleteResponseService(Request request, Logger logger) {
+        super(request, logger);
     }
 
     public void sendResponse(){

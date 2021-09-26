@@ -1,13 +1,14 @@
 package response;
 
+import logging.Logger;
 import request.Request;
 
 import java.io.*;
 
 public class PutResponseService extends ResponseService {
 
-    public PutResponseService(Request request) {
-        super(request);
+    public PutResponseService(Request request, Logger logger) {
+        super(request, logger);
     }
 
     public void sendResponse(){
