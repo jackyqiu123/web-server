@@ -4,7 +4,9 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
-import java.util.Arrays;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 public class GetResponseService extends ResponseService {
@@ -14,12 +16,8 @@ public class GetResponseService extends ResponseService {
     }
 
     public void sendResponse(){
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()))){
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             if(isValidFile(this.file)){
-
-                String testMime = request.getMimeType();
-                String testUri = request.getUri();
-
                 if (request.getMimeType().contains("text")) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());
@@ -29,8 +27,11 @@ public class GetResponseService extends ResponseService {
                 } else {
                     byte[] body = getFileContentsBytes();
                     writer.write(this.okResponse());
-                    //TODO
-                    writer.write(Arrays.toString(body));
+
+                    //TODO fix image
+                    DataOutputStream byteWriter = new DataOutputStream(socket.getOutputStream());
+                    byteWriter.write(body);
+                    byteWriter.flush();
                 }
 
                 //TODO do we need this??
