@@ -4,6 +4,8 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class GetResponseService extends ResponseService {
@@ -17,8 +19,12 @@ public class GetResponseService extends ResponseService {
             String ifModifiedSince = "";
             if (request.getHeaders().containsKey("If-Modified-Since")) {
                 ifModifiedSince = request.getHeaders().get("If-Modified-Since").toString();
+
+                //TODO convert ifModifiedSince to Date
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy hh:mm:ss z");
+                ZonedDateTime zonedDateTime = ZonedDateTime.parse(ifModifiedSince, formatter);
             }
-            //TODO convert ifModifiedSince to Date
+
 
             if(isValidFile(this.file)){
                 //TODO compare ifModifiedSince to file last modified date
