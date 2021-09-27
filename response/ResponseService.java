@@ -103,8 +103,24 @@ public class ResponseService {
         response.append("Content-Length: " + contentLength + "\r\n");
         response.append("Content-Type: " + request.getMimeType() + "\r\n");
         response.append("Content-Location: " + uri + "\r\n");
-        String responseBytes = response.toString();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
+    }
+
+    public String notModifiedResponse(){
+        StringBuilder response = new StringBuilder();
+        Date date = new Date();
+        String httpVersion = this.request.getHttpVersion();
+        statusCode = 304;
+        statusReason = "NOT MODIFIED";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Location: " + uri + "\r\n");
+        String responseString = response.toString();
+        return responseString;
     }
 
     public String badRequest(){
@@ -186,7 +202,7 @@ public class ResponseService {
     }
 
     public List<String> getFileContentsText() throws IOException {
-        List<String> content = Files.readAllLines(file.toPath(), StandardCharsets.US_ASCII);
+        List<String> content = Files.readAllLines(file.toPath());
 
         int contentLengthCounter = 0;
         for (String line : content) {

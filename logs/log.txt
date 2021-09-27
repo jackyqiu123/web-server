@@ -1,1 +1,1 @@
-- - - 26/Sep/2021:23:14:47 -0700 GET /cgi-bin/perl_env HTTP/1.1 - -
+- - - 27/Sep/2021:10:05:09 -0700 GET /index.html HTTP/1.1 304 -
