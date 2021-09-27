@@ -14,22 +14,37 @@ public class DeleteResponseService extends ResponseService {
 
     public void sendResponse(){
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()))) {
-            int fileSize = this.body.toString().length();
+            int fileSize = body.toString().length();
             String httpVersion = request.getHttpVersion();
 
-            if((fileSize == 0) && this.isValidFile(this.file)){
-                 this.statusCode = 204;
-                 this.statusReason = "NO CONTENT";
-                 writer.write(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
-                 writer.write("Content-Length: " + fileSize + "\r\n");
-                 writer.write("Content-Type: " + request.getMimeType() + "\r\n");
+            if(isValidFile(file)){
+                if(fileSize == 0) {
+                    writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
+                    getFile().delete();
+                    writer.flush();
+                    writer.close();
+                } else {
+                    writer.write(this.okResponse()); // note: writing out bytes, can be converted into a string
+                    getFile().delete();
+                    writer.flush();
+                    writer.close();
+                }
 
-                writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
-                this.getFile().delete();
-                writer.flush();
-                writer.close();
-            }
-            else{ // send 404 Not Found
+
+//                 this.statusCode = 200;
+//                 this.statusReason = "NO CONTENT";
+//                 writer.write(httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
+//                 writer.write("Content-Length: " + fileSize + "\r\n");
+//                 writer.write("Content-Type: " + request.getMimeType() + "\r\n");
+//
+//                writer.write(this.noContentResponse()); // note: writing out bytes, can be converted into a string
+//                getFile().delete();
+//                writer.flush();
+//                writer.close();
+
+
+
+            } else { // send 404 Not Found
                  this.statusCode = 404;
                  this.statusReason = "NOT FOUND";
                  writer.write(this.httpVersion + " " + this.statusCode + " " + this.statusReason + "\r\n");
