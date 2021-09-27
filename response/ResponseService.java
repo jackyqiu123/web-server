@@ -186,7 +186,6 @@ public class ResponseService {
     }
 
     public List<String> getFileContentsText() throws IOException {
-        int i = 10;
         List<String> content = Files.readAllLines(file.toPath(), StandardCharsets.US_ASCII);
 
         int contentLengthCounter = 0;
