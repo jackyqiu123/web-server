@@ -27,8 +27,9 @@ public class GetResponseService extends ResponseService {
             }
 
             if (isScript(uri)) {
-                //TODO execute script
-                Boolean isScript = true;
+                ScriptService scriptService = new ScriptService(request, uri);
+                scriptService.runScript(writer, body.toString());
+                return;
             }
 
 
@@ -57,14 +58,12 @@ public class GetResponseService extends ResponseService {
 
                 writer.flush();
                 writer.close();
-            }
-            else{
+            } else{
                 writer.write(this.notFoundResponse());
                 writer.flush();
                 writer.close();
             }
-        }
-        catch(IOException e){
+        } catch(IOException | InterruptedException e){
             e.printStackTrace();
         }
     }
