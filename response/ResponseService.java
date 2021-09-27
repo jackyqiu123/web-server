@@ -41,7 +41,7 @@ public class ResponseService {
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
-                //TODO appropriate error handling
+                e.printStackTrace();
             }
         }
     }
@@ -234,49 +234,5 @@ public class ResponseService {
             }
         }
         return false;
-    }
-
-    Request getRequest() {
-        return request;
-    }
-
-    String getUri() {
-        return uri;
-    }
-
-    int getStatusCode() {
-        return statusCode;
-    }
-
-    String getStatusReason() {
-        return statusReason;
-    }
-
-    String getRequestType() {
-        return requestType;
-    }
-
-    Socket getSocket() {
-        return socket;
-    }
-
-    Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    File getFile() {
-        return file;
-    }
-
-    String getFileSize() {
-        return fileSize;
-    }
-
-    String getHttpVersion() {
-        return httpVersion;
-    }
-
-    byte[] getBody() {
-        return body;
     }
 }

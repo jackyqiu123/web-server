@@ -13,18 +13,18 @@ public class DeleteResponseService extends ResponseService {
     }
 
     public void sendResponse(){
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
             int fileSize = body.toString().length();
 
             if(isValidFile(file)){
                 if(fileSize == 0) {
                     writer.write(noContentResponse()); // note: writing out bytes, can be converted into a string
-                    getFile().delete();
+                    file.delete();
                     writer.flush();
                     writer.close();
                 } else {
                     writer.write(okResponse()); // note: writing out bytes, can be converted into a string
-                    getFile().delete();
+                    file.delete();
                     writer.flush();
                     writer.close();
                 }
