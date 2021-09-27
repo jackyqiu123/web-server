@@ -38,6 +38,7 @@ public class Logger {
         result += " " + requestLine;
         result += " " + statusCode;
         result += " " + sizeOfObjectReturned;
+        result += "\r\n";
 
         File file = new File(logFileLocation);
         if (!file.exists()) {
@@ -49,7 +50,7 @@ public class Logger {
             }
         }
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFileLocation))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFileLocation, true))) {
             writer.write(result);
         } catch (IOException e) {
             System.out.println("ERROR - while trying to write log into log file");
