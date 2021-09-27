@@ -4,9 +4,11 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class GetResponseService extends ResponseService {
@@ -17,26 +19,49 @@ public class GetResponseService extends ResponseService {
 
     public void sendResponse(){
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            String ifModifiedSince = "";
-            if (request.getHeaders().containsKey("If-Modified-Since")) {
-                ifModifiedSince = request.getHeaders().get("If-Modified-Since").toString();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+            ZonedDateTime ifModifiedSince = null;
 
-                //TODO convert ifModifiedSince to Date
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy hh:mm:ss z");
-                ZonedDateTime zonedDateTime = ZonedDateTime.parse(ifModifiedSince, formatter);
+            if (request.getHeaders().containsKey("If-Modified-Since")) {
+                String ifModifiedSinceString = request.getHeaders().get("If-Modified-Since").toString();
+                try {
+                    ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
+                } catch (DateTimeParseException e) {
+                    writer.write(badRequest());
+                    writer.flush();
+                    writer.close();
+                    return;
+                }
+
+            }
+
+            if (isValidFile(file) && ifModifiedSince != null) {
+                LocalDateTime fileTime = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault()
+                );
+
+                Instant fileTimeInstant = fileTime.toInstant(ZoneOffset.UTC);
+
+                ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
+                ZonedDateTime fileLastModified = ZonedDateTime.ofInstant( fileTimeInstant , zoneId );
+
+                long difference = ifModifiedSince.compareTo(fileLastModified);
+
+                if(difference > 0) {
+                    writer.write(notModifiedResponse());
+                    writer.flush();
+                    writer.close();
+                    return;
+                }
             }
 
             if (isScript(uri)) {
-                //TODO execute script
-                Boolean isScript = true;
+                ScriptService scriptService = new ScriptService(request, uri);
+                scriptService.runScript(writer, body.toString());
+                return;
             }
 
-
             if(isValidFile(this.file)){
-                //TODO compare ifModifiedSince to file last modified date
-                //TODO if true -> return 304 response
-
-
                 if (request.getMimeType().contains("text")) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());
@@ -57,14 +82,12 @@ public class GetResponseService extends ResponseService {
 
                 writer.flush();
                 writer.close();
-            }
-            else{
-                writer.write(this.notFoundResponse());
+            } else{
+                writer.write(notFoundResponse());
                 writer.flush();
                 writer.close();
             }
-        }
-        catch(IOException e){
+        } catch(IOException | InterruptedException e){
             e.printStackTrace();
         }
     }

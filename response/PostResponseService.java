@@ -14,10 +14,15 @@ public class PostResponseService extends ResponseService {
 
     public void sendResponse(){
 
-        //TODO do the scripting stuff
-
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             if(!file.exists()){ // file does not exist and will create it
+
+                if (isScript(uri)) {
+                    ScriptService scriptService = new ScriptService(request, uri);
+                    scriptService.runScript(writer, body.toString());
+                    return;
+                }
+
                 if(file.createNewFile()){
 
                     if(!writeContentToFile(file, request.getBody())) {
@@ -50,7 +55,7 @@ public class PostResponseService extends ResponseService {
                 writer.close();
             }
         }
-        catch(IOException e){
+        catch(IOException | InterruptedException e){
             e.printStackTrace();
         }
     }

@@ -75,7 +75,7 @@ public class ResourceChecker {
                 isAliased = true;
                 newUri += uriPart;
             } else if (scriptAliases.containsKey(uriPart)) {
-                uriPart = aliases.get(uriPart);
+                uriPart = scriptAliases.get(uriPart);
                 isAliased = true;
                 newUri += uriPart;
             } else {

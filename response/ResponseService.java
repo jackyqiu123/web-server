@@ -41,7 +41,7 @@ public class ResponseService {
             try {
                 this.fileReader = new FileReader(this.uri);
             } catch (FileNotFoundException e) {
-                //TODO appropriate error handling
+                e.printStackTrace();
             }
         }
     }
@@ -103,8 +103,24 @@ public class ResponseService {
         response.append("Content-Length: " + contentLength + "\r\n");
         response.append("Content-Type: " + request.getMimeType() + "\r\n");
         response.append("Content-Location: " + uri + "\r\n");
-        String responseBytes = response.toString();
-        return responseBytes;
+        String responseString = response.toString();
+        return responseString;
+    }
+
+    public String notModifiedResponse(){
+        StringBuilder response = new StringBuilder();
+        Date date = new Date();
+        String httpVersion = this.request.getHttpVersion();
+        statusCode = 304;
+        statusReason = "NOT MODIFIED";
+
+        logger.setStatusCode(String.valueOf(statusCode));
+
+        response.append(httpVersion + " " + statusCode + " " + statusReason + "\r\n");
+        response.append("Date: " + date + "\r\n");
+        response.append("Content-Location: " + uri + "\r\n");
+        String responseString = response.toString();
+        return responseString;
     }
 
     public String badRequest(){
@@ -186,8 +202,7 @@ public class ResponseService {
     }
 
     public List<String> getFileContentsText() throws IOException {
-        int i = 10;
-        List<String> content = Files.readAllLines(file.toPath(), StandardCharsets.US_ASCII);
+        List<String> content = Files.readAllLines(file.toPath());
 
         int contentLengthCounter = 0;
         for (String line : content) {
@@ -235,49 +250,5 @@ public class ResponseService {
             }
         }
         return false;
-    }
-
-    Request getRequest() {
-        return request;
-    }
-
-    String getUri() {
-        return uri;
-    }
-
-    int getStatusCode() {
-        return statusCode;
-    }
-
-    String getStatusReason() {
-        return statusReason;
-    }
-
-    String getRequestType() {
-        return requestType;
-    }
-
-    Socket getSocket() {
-        return socket;
-    }
-
-    Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    File getFile() {
-        return file;
-    }
-
-    String getFileSize() {
-        return fileSize;
-    }
-
-    String getHttpVersion() {
-        return httpVersion;
-    }
-
-    byte[] getBody() {
-        return body;
     }
 }
