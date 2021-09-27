@@ -4,6 +4,7 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -18,7 +19,7 @@ public class GetResponseService extends ResponseService {
     }
 
     public void sendResponse(){
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
+//        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
             ZonedDateTime ifModifiedSince = null;
 
@@ -27,10 +28,14 @@ public class GetResponseService extends ResponseService {
                 try {
                     ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
                 } catch (DateTimeParseException e) {
-                    writer.write(badRequest());
-                    writer.flush();
-                    writer.close();
-                    return;
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                        writer.write(badRequest());
+                        writer.flush();
+                        writer.close();
+                        return;
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
 
             }
@@ -48,47 +53,65 @@ public class GetResponseService extends ResponseService {
                 long difference = ifModifiedSince.compareTo(fileLastModified);
 
                 if(difference > 0) {
-                    writer.write(notModifiedResponse());
-                    writer.flush();
-                    writer.close();
-                    return;
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                        writer.write(notModifiedResponse());
+                        writer.flush();
+                        writer.close();
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             if (isScript(uri)) {
-                ScriptService scriptService = new ScriptService(request, uri);
-                scriptService.runScript(writer, body.toString());
-                return;
+                //TODO send bytes?
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                    ScriptService scriptService = new ScriptService(request, uri);
+                    scriptService.runScript(writer, body.toString());
+                    return;
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             if(isValidFile(this.file)){
                 if (request.getMimeType().contains("text")) {
-                    List<String> body = getFileContentsText();
-                    writer.write(this.okResponse());
-                    for (String line : body) {
-                        writer.write(line);
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                        List<String> body = getFileContentsText();
+                        writer.write(this.okResponse());
+                        for (String line : body) {
+                            writer.write(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else {
-                    String body = getFileContentsBytes();
-                    writer.write(this.okResponse());
+                    try (DataOutputStream writer = new DataOutputStream(socket.getOutputStream())) {
+                        byte[] body = getFileContentsBytes();
+                        writer.write(this.okResponse().getBytes(StandardCharsets.UTF_8));
 
-                    //TODO fix image
-                    writer.write(body);
-                    writer.flush();
+                        //TODO fix image
+                        writer.write(body);
+                        writer.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                //TODO do we need this??
+                //TODO DELETE THIS?
                 //writer.write(this.body.toString()); // server return the body content of the request
 
-                writer.flush();
-                writer.close();
             } else{
-                writer.write(notFoundResponse());
-                writer.flush();
-                writer.close();
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                    writer.write(notFoundResponse());
+                    writer.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch(IOException | InterruptedException e){
-            e.printStackTrace();
-        }
+//        } catch(IOException | InterruptedException e){
+//            e.printStackTrace();
+//        }
     }
 }

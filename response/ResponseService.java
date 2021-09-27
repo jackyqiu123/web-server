@@ -214,13 +214,13 @@ public class ResponseService {
         return content;
     }
 
-    public String getFileContentsBytes() throws IOException {
+    public byte[] getFileContentsBytes() throws IOException {
         byte[] content = Files.readAllBytes(file.toPath());
 
         contentLength = content.length;
         logger.setSizeOfObjectReturned(String.valueOf(contentLength));
 
-        return content.toString();
+        return content;
     }
 
     public Boolean writeContentToFile(File file, byte[] content) {
