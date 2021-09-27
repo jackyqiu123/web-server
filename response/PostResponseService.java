@@ -4,11 +4,12 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
+import java.util.Map;
 
 public class PostResponseService extends ResponseService {
 
-    public PostResponseService(Request request, Logger logger) {
-        super(request, logger);
+    public PostResponseService(Request request, Logger logger, Map<String, String> scriptAliases) {
+        super(request, logger, scriptAliases);
     }
 
     public void sendResponse(){

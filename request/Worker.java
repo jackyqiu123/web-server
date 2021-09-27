@@ -74,14 +74,14 @@ public class Worker implements Runnable {
         }
 
         ResponseHandler responseHandler = new ResponseHandler();
-        responseHandler.sendResponse(request, logger);
+        responseHandler.sendResponse(request, logger, scriptAliases);
 
         logger.logStatus();
     }
 
     private void handleError(ResponseCode responseCode) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))){
-            ResponseService responseService = new ResponseService(request, logger);
+            ResponseService responseService = new ResponseService(request, logger, scriptAliases);
 
             switch (responseCode) {
                 case CODE400:
