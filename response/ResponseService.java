@@ -4,6 +4,8 @@ import logging.Logger;
 import request.*;
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.nio.file.Files;
 
@@ -22,8 +24,9 @@ public class ResponseService {
     protected String httpVersion;
     protected final byte[] body;
     protected int contentLength = 0;
+    protected Map<String, String> scriptAliases;
 
-    public ResponseService(Request request, Logger logger) {
+    public ResponseService(Request request, Logger logger, Map<String, String> scriptAliases) {
         this.request = request;
         this.uri = request.getUri();
         this.requestType = request.getRequestType().toString();
@@ -32,6 +35,7 @@ public class ResponseService {
         this.body = request.getBody();
         this.socket = request.getClient();
         this.logger = logger;
+        this.scriptAliases = scriptAliases;
 
         if(isValidFile(file)){
             try {
@@ -182,7 +186,8 @@ public class ResponseService {
     }
 
     public List<String> getFileContentsText() throws IOException {
-        List<String> content = Files.readAllLines(file.toPath());
+        int i = 10;
+        List<String> content = Files.readAllLines(file.toPath(), StandardCharsets.US_ASCII);
 
         int contentLengthCounter = 0;
         for (String line : content) {
@@ -194,13 +199,13 @@ public class ResponseService {
         return content;
     }
 
-    public byte[] getFileContentsBytes() throws IOException {
+    public String getFileContentsBytes() throws IOException {
         byte[] content = Files.readAllBytes(file.toPath());
 
         contentLength = content.length;
         logger.setSizeOfObjectReturned(String.valueOf(contentLength));
 
-        return content;
+        return content.toString();
     }
 
     public Boolean writeContentToFile(File file, byte[] content) {
@@ -221,6 +226,15 @@ public class ResponseService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Boolean isScript(String uri) {
+        for (String scriptAlias : scriptAliases.values()) {
+            if (uri.contains(scriptAlias)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     Request getRequest() {

@@ -4,11 +4,12 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
+import java.util.Map;
 
 public class HeadResponseService extends ResponseService {
 
-    public HeadResponseService(Request request, Logger logger) {
-        super(request, logger);
+    public HeadResponseService(Request request, Logger logger, Map<String, String> scriptAliases) {
+        super(request, logger, scriptAliases);
     }
 
     public void sendResponse(){ // basically the same response for Get but does not return file contents and body
