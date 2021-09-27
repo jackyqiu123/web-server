@@ -4,6 +4,7 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -18,77 +19,93 @@ public class GetResponseService extends ResponseService {
     }
 
     public void sendResponse(){
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
-            ZonedDateTime ifModifiedSince = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        ZonedDateTime ifModifiedSince = null;
 
-            if (request.getHeaders().containsKey("If-Modified-Since")) {
-                String ifModifiedSinceString = request.getHeaders().get("If-Modified-Since").toString();
-                try {
-                    ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
-                } catch (DateTimeParseException e) {
+        if (request.getHeaders().containsKey("If-Modified-Since")) {
+            String ifModifiedSinceString = request.getHeaders().get("If-Modified-Since").toString();
+            try {
+                ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
+            } catch (DateTimeParseException e) {
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     writer.write(badRequest());
                     writer.flush();
                     writer.close();
                     return;
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
-
             }
 
-            if (isValidFile(file) && ifModifiedSince != null) {
-                LocalDateTime fileTime = LocalDateTime.ofInstant(
-                        Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault()
-                );
+        }
 
-                Instant fileTimeInstant = fileTime.toInstant(ZoneOffset.UTC);
+        if (isValidFile(file) && ifModifiedSince != null) {
+            LocalDateTime fileTime = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault()
+            );
 
-                ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
-                ZonedDateTime fileLastModified = ZonedDateTime.ofInstant( fileTimeInstant , zoneId );
+            Instant fileTimeInstant = fileTime.toInstant(ZoneOffset.UTC);
 
-                long difference = ifModifiedSince.compareTo(fileLastModified);
+            ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
+            ZonedDateTime fileLastModified = ZonedDateTime.ofInstant( fileTimeInstant , zoneId );
 
-                if(difference > 0) {
+            long difference = ifModifiedSince.compareTo(fileLastModified);
+
+            if(difference > 0) {
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     writer.write(notModifiedResponse());
                     writer.flush();
                     writer.close();
                     return;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+        }
 
-            if (isScript(uri)) {
+        if (isScript(uri)) {
+            //TODO send bytes?
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                 ScriptService scriptService = new ScriptService(request, uri);
                 scriptService.runScript(writer, body.toString());
                 return;
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
+        }
 
-            if(isValidFile(this.file)){
-                if (request.getMimeType().contains("text")) {
+        if(isValidFile(this.file)){
+            if (request.getMimeType().contains("text")) {
+                try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());
                     for (String line : body) {
                         writer.write(line);
                     }
-                } else {
-                    String body = getFileContentsBytes();
-                    writer.write(this.okResponse());
-
-                    //TODO fix image
-                    writer.write(body);
-                    writer.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            } else {
+                try (DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream())) {
+                    byte[] body = getFileContentsBytes();
+                    dataOutputStream.write(this.okResponse().getBytes(StandardCharsets.UTF_8));
+                    dataOutputStream.write(body);
+                    dataOutputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-                //TODO do we need this??
-                //writer.write(this.body.toString()); // server return the body content of the request
+            //TODO DELETE THIS?
+            //writer.write(this.body.toString()); // server return the body content of the request
 
-                writer.flush();
-                writer.close();
-            } else{
+        } else{
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                 writer.write(notFoundResponse());
                 writer.flush();
-                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch(IOException | InterruptedException e){
-            e.printStackTrace();
         }
     }
 }

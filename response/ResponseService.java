@@ -29,6 +29,7 @@ public class ResponseService {
     public ResponseService(Request request, Logger logger, Map<String, String> scriptAliases) {
         this.request = request;
         this.uri = request.getUri();
+        //TODO null pointer ??
         this.requestType = request.getRequestType().toString();
         this.headers = request.getHeaders();
         this.file = new File(request.getUri());
@@ -214,13 +215,13 @@ public class ResponseService {
         return content;
     }
 
-    public String getFileContentsBytes() throws IOException {
+    public byte[] getFileContentsBytes() throws IOException {
         byte[] content = Files.readAllBytes(file.toPath());
 
         contentLength = content.length;
         logger.setSizeOfObjectReturned(String.valueOf(contentLength));
 
-        return content.toString();
+        return content;
     }
 
     public Boolean writeContentToFile(File file, byte[] content) {
