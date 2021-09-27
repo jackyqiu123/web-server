@@ -15,7 +15,15 @@ public class PutResponseService extends ResponseService {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             if(!file.exists()){ // file does not exist and will create it
                 if(file.createNewFile()){
-                    writer.write(this.createdResponse());
+
+                    if(!writeContentToFile(file, request.getBody())) {
+                        writer.write(internalServerError());
+                        writer.flush();
+                        writer.close();
+                        return;
+                    }
+
+                    writer.write(createdResponse());
                     writer.flush();
                     writer.close();
                 } 
@@ -25,6 +33,14 @@ public class PutResponseService extends ResponseService {
                     writer.close();
                 }
             } else { // file already exist
+
+                if(!writeContentToFile(file, request.getBody())) {
+                    writer.write(internalServerError());
+                    writer.flush();
+                    writer.close();
+                    return;
+                }
+
                 writer.write(okResponse());
                 writer.flush();
                 writer.close();

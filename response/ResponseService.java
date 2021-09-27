@@ -203,6 +203,26 @@ public class ResponseService {
         return content;
     }
 
+    public Boolean writeContentToFile(File file, byte[] content) {
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            outputStream.write(content);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean appendContentToFile(File file, byte[] content) {
+        try (FileOutputStream outputStream = new FileOutputStream(file, true)) {
+            outputStream.write(content);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     Request getRequest() {
         return request;
     }

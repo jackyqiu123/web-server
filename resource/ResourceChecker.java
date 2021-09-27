@@ -31,6 +31,8 @@ public class ResourceChecker {
         }
 
         if (request.getRequestType() == RequestType.POST || request.getRequestType() == RequestType.PUT) {
+            String newUri = documentRoot + uri;
+            request.setUri(newUri.replace("//", "/"));
             return ResponseCode.CODE200;
         }
 

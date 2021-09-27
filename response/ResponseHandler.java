@@ -26,6 +26,7 @@ public class ResponseHandler {
             case PUT:
                 PutResponseService putHandler = new PutResponseService(request, logger);
                 putHandler.sendResponse();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + request.getRequestType());
         }
