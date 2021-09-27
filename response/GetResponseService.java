@@ -4,12 +4,9 @@ import logging.Logger;
 import request.Request;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,9 +21,18 @@ public class GetResponseService extends ResponseService {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH);
             ZonedDateTime ifModifiedSince = null;
+
             if (request.getHeaders().containsKey("If-Modified-Since")) {
                 String ifModifiedSinceString = request.getHeaders().get("If-Modified-Since").toString();
-                ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
+                try {
+                    ifModifiedSince = ZonedDateTime.now().parse(ifModifiedSinceString, formatter);
+                } catch (DateTimeParseException e) {
+                    writer.write(badRequest());
+                    writer.flush();
+                    writer.close();
+                    return;
+                }
+
             }
 
             if (isValidFile(file) && ifModifiedSince != null) {
@@ -38,7 +44,6 @@ public class GetResponseService extends ResponseService {
 
                 ZoneId zoneId = ZoneId.of( "America/Los_Angeles" );
                 ZonedDateTime fileLastModified = ZonedDateTime.ofInstant( fileTimeInstant , zoneId );
-
 
                 long difference = ifModifiedSince.compareTo(fileLastModified);
 
@@ -57,10 +62,6 @@ public class GetResponseService extends ResponseService {
             }
 
             if(isValidFile(this.file)){
-                //TODO compare ifModifiedSince to file last modified date
-                //TODO if true -> return 304 response
-
-
                 if (request.getMimeType().contains("text")) {
                     List<String> body = getFileContentsText();
                     writer.write(this.okResponse());
